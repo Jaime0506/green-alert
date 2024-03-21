@@ -12,14 +12,23 @@ const center = {
 }
 
 interface MapProps {
-    API_KEY: string,
+    API_KEY: string
+    isOpenDrawer: boolean
+    toggleDrawer: () => void
     location: {
         lat: number,
         lng: number
     }
 }
 
-export const Map = ({ API_KEY, location }: MapProps) => {
+interface MarkerType {
+    coords: {
+        lat: number,
+        lng: number
+    }
+}
+
+export const Map = ({ API_KEY, location, toggleDrawer, isOpenDrawer }: MapProps) => {
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: API_KEY,
@@ -27,6 +36,14 @@ export const Map = ({ API_KEY, location }: MapProps) => {
     })
 
     const [, setMap] = useState<unknown>(undefined)
+    const [markers, setMarkers] = useState<MarkerType[]>([
+        {
+            coords: {
+                lat: center.lat,
+                lng: center.lng
+            }
+        }
+    ])
 
     const onLoad = useCallback((map: google.maps.Map) => {
         const bounds = new window.google.maps.LatLngBounds(center);
@@ -39,6 +56,30 @@ export const Map = ({ API_KEY, location }: MapProps) => {
         setMap(null)
     }, [])
 
+    const addMarker = (lat: number, lng: number) => {
+        setMarkers([...markers, {
+            coords: {
+                lat,
+                lng
+            }
+        }])
+    }
+
+    const handleOnClickMap = (event: google.maps.MapMouseEvent) => {
+        const { latLng } = event
+
+        if (latLng != null) {
+            const lat = latLng?.lat()
+            const lng = latLng?.lng()
+
+            toggleDrawer()
+    
+            if (!isOpenDrawer) addMarker(lat, lng) 
+
+        }
+    }
+
+
     return isLoaded ? (
         <GoogleMap
             mapContainerStyle={containerStyles}
@@ -46,10 +87,17 @@ export const Map = ({ API_KEY, location }: MapProps) => {
             zoom={15}
             onLoad={onLoad}
             onUnmount={onUnmount}
-            onClick={(event) => console.log(event.latLng?.lat(), event.latLng?.lng())}
+            onClick={handleOnClickMap}
         >
-            <Marker position={center}/>
-            <Marker position={{ lat: 4.642579, lng: -74.059486}}/>
+            {markers.map((item) => (
+                <Marker position={item.coords} />
+            ))}
+            {/* <Marker position={center} 
+                icon={{
+                url: UserIcon,
+                scaledSize: new window.google.maps.Size(25, 25)
+            }} /> */}
+
         </GoogleMap>
     ) : <></>
 }
