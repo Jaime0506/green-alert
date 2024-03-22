@@ -21,7 +21,7 @@ export const HomePage = () => {
     const navigateToMap = () => {
         // En este caso creo una funcion, que se va a encargar de usar la funcion
         // de router dom, para navegar hacia /mapa
-        navigate('/mapa')
+        navigate('/map')
     }
 
     // El resto son los estilos y estructura que va a tener esta pagina
