@@ -1,16 +1,32 @@
 import { Button } from '@nextui-org/react'
 import { useNavigate } from 'react-router-dom'
 
+// Importo la imagenq que voy a usar de fondo, en este caso el de los arbolitos,
+// de recomendacion si va a agregar imagenes, uselas en formado .webp transformela
+// los navegadores las cargan mas rapido
 import backgroundImage from '../assets/background.webp'
 
+// Mi componente <HomePage /> va a contener todo lo que va a tener mi pagina inicial
+// descripccion titulos etc.
+
+// Puede notar que aca no ando importando el Navbar, y eso es porque yo lo importo en el
+// AppRouter, es decir todas las rutas a acepccion de la de /auth va tener que renderizar
+// ese Navbar (el navbar es la barra superior con las opcciones de navegacion)
 export const HomePage = () => {
 
+    // Hago uso del hook, useNavigate para poder navegar entre las rutas de mi
+    // aplicacion, que defini en mi <AppRouter />
     const navigate = useNavigate()
 
     const navigateToMap = () => {
+        // En este caso creo una funcion, que se va a encargar de usar la funcion
+        // de router dom, para navegar hacia /mapa
         navigate('/mapa')
     }
 
+    // El resto son los estilos y estructura que va a tener esta pagina
+
+    // Devuelvase al AppRputer y valla al MapPage
     return (
         <main>
             <div className='bg-no-repeat bg-cover bg-center' style={{ backgroundImage: `url(${backgroundImage})`, width: '100%', minHeight: '100vh' }}>

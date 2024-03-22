@@ -13,7 +13,7 @@ export const Navbar = () => {
                 <nav>
                     <ul className="flex gap-6">
                         <li>
-                            <Link to="/mapa">Mapa</Link>
+                            <Link to="/map">Mapa</Link>
                         </li>
                         <li>
                             <Link to="/auth/login">Inicia sesion</Link>
