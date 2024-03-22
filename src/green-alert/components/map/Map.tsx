@@ -6,10 +6,10 @@ const containerStyles = {
     height: 'calc(100vh - 93px)'
 }
 
-const center = {
-    lat: 4.6365476,
-    lng: -74.0652501
-}
+// const center = {
+//     lat: 4.6365476,
+//     lng: -74.0652501
+// }
 
 interface MapProps {
     API_KEY: string
@@ -45,12 +45,12 @@ export const Map = ({ API_KEY, location, toggleDrawer, isOpenDrawer }: MapProps)
         }
     ])
 
-    const onLoad = useCallback((map: google.maps.Map) => {
-        const bounds = new window.google.maps.LatLngBounds(center);
-        map.fitBounds(bounds);
+    // const onLoad = useCallback((map: google.maps.Map) => {
+    //     // const bounds = new window.google.maps.LatLngBounds(center);
+    //     // map.fitBounds(bounds);
 
-        setMap(map)
-    }, [])
+    //     // setMap(map)
+    // }, [])
 
     const onUnmount = useCallback(() => {
         setMap(null)
@@ -75,17 +75,15 @@ export const Map = ({ API_KEY, location, toggleDrawer, isOpenDrawer }: MapProps)
             toggleDrawer()
     
             if (!isOpenDrawer) addMarker(lat, lng) 
-
         }
     }
-
 
     return isLoaded ? (
         <GoogleMap
             mapContainerStyle={containerStyles}
-            center={location}
+            center={{ lat: location.lat, lng: location.lng }}
             zoom={15}
-            onLoad={onLoad}
+            // onLoad={onLoad}
             onUnmount={onUnmount}
             onClick={handleOnClickMap}
         >
