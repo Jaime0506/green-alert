@@ -39,8 +39,8 @@ export const Map = ({ API_KEY, location, toggleDrawer, isOpenDrawer }: MapProps)
     const [markers, setMarkers] = useState<MarkerType[]>([
         {
             coords: {
-                lat: center.lat,
-                lng: center.lng
+                lat: location.lat,
+                lng: location.lng
             }
         }
     ])
