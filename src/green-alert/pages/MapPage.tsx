@@ -1,7 +1,8 @@
-import { useState } from "react"
-import { useAppSelector } from "../../hooks/useStore"
+import { useEffect, useState } from "react"
+import { useAppDispatch, useAppSelector } from "../../hooks/useStore"
 
 import { Map, DrawerWrapper } from "../components"
+import { fetchDataIncidents } from "../../store/Incidents"
 
 // Esta es la manera en la que puedo llamar las variables de entorno
 // definidar en el archivo .env
@@ -17,6 +18,8 @@ export const MapPage = () => {
     // el hook viene de RTK, y como solo tengo el estado location, simplemnte traigo lo que contega
     // dicho estado
     const { coords } = useAppSelector(state => state.location)
+    const dispatch = useAppDispatch()
+
     // en este caso de mi estado location unicamente tiene la propiedad coords
     // la cual es un objeto que contiene la lat, lng del usuario, (que se guardo cuando se 
     // monto por primera vez mi aplicacion con el useEffect, que explique anteriormente)
@@ -33,6 +36,14 @@ export const MapPage = () => {
     const toggleDrawer = () => {
         setIsOpenDrawer(value => !value)
     }
+    
+    // Cuando se monte el componente va a cargar en el estado global
+    // mediante mi thunk 
+    useEffect(() => {
+        dispatch(fetchDataIncidents())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+    
 
     // Aca simplemente va a mostrar un Cargando Ando mientras se carga los datos, porque puede que tarde mas de lo esperado
     // entonces se va a mostrar esto mientras, cuando ya se tengan los datos, react

@@ -13,7 +13,7 @@ const initialState: Location  = {
     }
 }
 
-export const locationSlice = createSlice({
+const locationSlice = createSlice({
     name: 'location',
     initialState,
 
