@@ -2,11 +2,7 @@ import { useState } from "react"
 import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from "@react-google-maps/api"
 
 import { useAppSelector } from "../../../hooks/useStore"
-
-import MarkerFire from '../../../assets/icons/fire.svg'
-import Rain from '../../../assets/icons/rain.svg'
-import LandSlide from '../../../assets/icons/landslide.svg'
-import defaultIcon from '../../../assets/icons/default.png'
+import { handleIncidentActiveColor, handleIncidentIcon, handleIncidentText, handleIncidentColor, handleIncidentActiveText, handleIncidentFormatDate } from "../../../utils"
 
 // El tipo de dato que va a recivir mi componente
 interface MapProps {
@@ -33,7 +29,7 @@ export const Map = ({ API_KEY, toggleDrawer, isOpenDrawer }: MapProps) => {
         googleMapsApiKey: API_KEY,
         id: 'google-map-script'
     })
-    
+
     const [activeMarker, setActiveMarker] = useState<string | null>(null)
 
     const handleOnLoad = (map: google.maps.Map) => {
@@ -51,8 +47,8 @@ export const Map = ({ API_KEY, toggleDrawer, isOpenDrawer }: MapProps) => {
             const lat = latLng?.lat()
             const lng = latLng?.lng()
 
-            // Abre el modal cuando hace click
-            toggleDrawer()
+            // Abre el modal cuando hace click, siempre y cuando no halla un un marker activo
+            if (!activeMarker) toggleDrawer()
 
             // Agrega un marker cuando se hace click en el mapa, pero el Drawer
             // se encuentra cerrado, porque si no hago esta condicion
@@ -68,49 +64,39 @@ export const Map = ({ API_KEY, toggleDrawer, isOpenDrawer }: MapProps) => {
         setActiveMarker(id)
     }
 
-    const handleIcon = (typeIncident: number): string => {
-        if (typeIncident == 1) return MarkerFire 
-
-        if (typeIncident == 2) return LandSlide
-
-        if (typeIncident == 3)  return Rain
-
-        return defaultIcon
-    }
-
-    const handleIncidentType = (typeIncident: number): string => {
-        if (typeIncident == 1) return "Incendio"
-
-        if (typeIncident == 2) return "Deslizamiento de tierras"
-
-        if (typeIncident == 3)  return "Fuertes lluvias"
-
-        return ""
-    }
-
     return (isLoaded && loadedIncidents) && (
         <GoogleMap
             onLoad={handleOnLoad}
             onClick={handleOnClickMap}
             mapContainerStyle={{ width: "100vw", height: "calc(100vh - 93px)" }}
         >
-            {markers?.map(({ id, coords, incident_type }) => (
+            {markers?.map(({ id, coords, incident_type, active, created_at }) => (
                 <Marker
                     key={id}
                     position={coords}
                     onClick={() => handleActiveMarker(id)}
                     icon={{
-                        url: handleIcon(incident_type),
+                        url: handleIncidentIcon(incident_type),
                         scaledSize: new window.google.maps.Size(30, 30)
                     }}
                 >
                     {activeMarker === id ? (
                         <InfoWindow onCloseClick={() => setActiveMarker(null)}>
                             <main className="p-2 flex flex-col">
-                                <h1 className={`text-base pb-4 text-green-600 font-bold ${incident_type === 1 && 'text-red-600'} ${incident_type === 2 && 'text-amber-700'} ${incident_type === 3 && 'text-blue-400'}`}>
-                                    {handleIncidentType(incident_type)}
+                                <h1 className={`text-base pb-2 font-bold ${handleIncidentColor(incident_type)}`}>
+                                    {handleIncidentText(incident_type)}
                                 </h1>
-                                <p>El que lea esto es gay, pero mega gay</p>
+
+                                <section>
+                                    <header className="flex gap-1">
+                                        <h3>Estado:</h3>
+                                        <p className={`font-bold ${handleIncidentActiveColor(active)}`}>{handleIncidentActiveText(active)}</p>
+                                    </header>
+
+                                    <div className="pt-1">
+                                        <p>{handleIncidentFormatDate(created_at)}</p>
+                                    </div>
+                                </section>
                             </main>
                         </InfoWindow>
                     ) : null}
