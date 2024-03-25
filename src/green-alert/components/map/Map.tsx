@@ -4,8 +4,6 @@ import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from "@react-google-map
 import { useAppSelector } from "../../../hooks/useStore"
 import { handleIncidentActiveColor, handleIncidentIcon, handleIncidentText, handleIncidentColor, handleIncidentActiveText, handleIncidentFormatDate, handleIncidentImage } from "../../../utils"
 
-import landSlide from '../../../assets/infowindow/landslide.svg'
-
 // El tipo de dato que va a recivir mi componente
 interface MapProps {
     API_KEY: string
