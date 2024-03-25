@@ -1,9 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { MarkerType  } from "../../types";
+import { MarkerType, MarkerTypeRequired  } from "../../types";
 
 interface initialStateProp {
-    markers: MarkerType[] | undefined
+    markers: MarkerTypeRequired[] | undefined
     loaded: boolean
 }
 

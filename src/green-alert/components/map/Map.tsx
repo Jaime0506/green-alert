@@ -1,14 +1,12 @@
-import { useCallback, useState } from "react"
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api"
+import { useState } from "react"
+import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from "@react-google-maps/api"
 
-import type { MarkerType } from '../../../types'
 import { useAppSelector } from "../../../hooks/useStore"
 
-// Este son los estilos del contenedor de mi mapa
-const containerStyles = {
-    width: '100%',
-    height: 'calc(100vh - 93px)'
-}
+import MarkerFire from '../../../assets/icons/fire.svg'
+import Rain from '../../../assets/icons/rain.svg'
+import LandSlide from '../../../assets/icons/landslide.svg'
+import defaultIcon from '../../../assets/icons/default.png'
 
 // El tipo de dato que va a recivir mi componente
 interface MapProps {
@@ -21,7 +19,7 @@ interface MapProps {
     }
 }
 
-export const Map = ({ API_KEY, location, toggleDrawer, isOpenDrawer }: MapProps) => {
+export const Map = ({ API_KEY, toggleDrawer, isOpenDrawer }: MapProps) => {
 
     const { loaded: loadedIncidents, markers } = useAppSelector(state => state.indicents)
 
@@ -35,20 +33,15 @@ export const Map = ({ API_KEY, location, toggleDrawer, isOpenDrawer }: MapProps)
         googleMapsApiKey: API_KEY,
         id: 'google-map-script'
     })
+    
+    const [activeMarker, setActiveMarker] = useState<string | null>(null)
 
-    // Aca simplemnte defino el estado que necesita la api de maps, para funcionar, tiene
-    // el tipo unknown porque si le defino un tipo desde el inicio debo darle esos valores inciales
-    // de una vez y se presta pa problemas
-    const [, setMap] = useState<unknown>(undefined)
+    const handleOnLoad = (map: google.maps.Map) => {
+        const bounds = new google.maps.LatLngBounds()
+        markers?.forEach(({ coords }) => bounds.extend(coords))
 
-    // Aca defino un estado que va a ser un Array que va a conterner elementos
-    // del tipo MarkerType que lo defini al inicio, y le doy un item y valor inicial
-    // que es el de la ubicacion actual, que la recibo a traves de los props
-
-    // uso de la prop onUnmount, que practicamente se va a ajecutar cuando se desmonte este componente
-    const onUnmount = useCallback(() => {
-        setMap(null)
-    }, [])
+        map.fitBounds(bounds)
+    }
 
     // Funcion que se va a llamar cada vez que se ejecute haga click en el mapa
     const handleOnClickMap = (event: google.maps.MapMouseEvent) => {
@@ -67,35 +60,62 @@ export const Map = ({ API_KEY, location, toggleDrawer, isOpenDrawer }: MapProps)
             // cuando solo quiero cerrar el Drawer
             if (!isOpenDrawer) console.log(lat, lng)
         }
+
+        setActiveMarker(null)
     }
 
-    // Si ya se cargo la conexion con google, se muestra el mapa, si no, no se muestra nada
-    // mientras se termina de cargar
+    const handleActiveMarker = (id: string) => {
+        setActiveMarker(id)
+    }
 
-    return isLoaded && loadedIncidents ? (
+    const handleIcon = (typeIncident: number): string => {
+        if (typeIncident == 1) return MarkerFire 
+
+        if (typeIncident == 2) return LandSlide
+
+        if (typeIncident == 3)  return Rain
+
+        return defaultIcon
+    }
+
+    const handleIncidentType = (typeIncident: number): string => {
+        if (typeIncident == 1) return "Incendio"
+
+        if (typeIncident == 2) return "Deslizamiento de tierras"
+
+        if (typeIncident == 3)  return "Fuertes lluvias"
+
+        return ""
+    }
+
+    return (isLoaded && loadedIncidents) && (
         <GoogleMap
-            mapContainerStyle={containerStyles}
-            center={{ lat: location.lat, lng: location.lng }}
-            zoom={15}
-            // onLoad={onLoad}
-            onUnmount={onUnmount}
+            onLoad={handleOnLoad}
             onClick={handleOnClickMap}
+            mapContainerStyle={{ width: "100vw", height: "calc(100vh - 93px)" }}
         >
-            {/* 
-                Esto va a renderizar un marcador, por cada marcador existente en mi estado global del store 
-                aca puede encontrar mas info de como funciona el .map: https://mauriciogc.medium.com/react-map-filter-y-reduce-54777359d94
-            */}
-            {markers?.map((item: MarkerType) => {
-                if (item.coords) return <Marker key={item.id} position={item.coords} />
-            })}
-
-            {/* Forma para que se muestre con un icono personalizado */}
-
-            {/* <Marker position={center} 
-                icon={{
-                url: UserIcon,
-                scaledSize: new window.google.maps.Size(25, 25)
-            }} /> */}
+            {markers?.map(({ id, name, coords, incident_type }) => (
+                <Marker
+                    key={id}
+                    position={coords}
+                    onClick={() => handleActiveMarker(id)}
+                    icon={{
+                        url: handleIcon(incident_type),
+                        scaledSize: new window.google.maps.Size(30, 30)
+                    }}
+                >
+                    {activeMarker === id ? (
+                        <InfoWindow onCloseClick={() => setActiveMarker(null)}>
+                            <main className="p-2 flex flex-col">
+                                <h1 className={`text-base pb-4 text-green-600 font-bold ${incident_type === 1 && 'text-red-600'} ${incident_type === 2 && 'text-amber-700'} ${incident_type === 3 && 'text-blue-400'}`}>
+                                    {handleIncidentType(incident_type)}
+                                </h1>
+                                <p>El que lea esto es gay, pero mega gay</p>
+                            </main>
+                        </InfoWindow>
+                    ) : null}
+                </Marker>
+            ))}
         </GoogleMap>
-    ) : <></>
+    )
 }
