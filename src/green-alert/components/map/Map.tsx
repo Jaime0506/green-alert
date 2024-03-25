@@ -2,7 +2,9 @@ import { useState } from "react"
 import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from "@react-google-maps/api"
 
 import { useAppSelector } from "../../../hooks/useStore"
-import { handleIncidentActiveColor, handleIncidentIcon, handleIncidentText, handleIncidentColor, handleIncidentActiveText, handleIncidentFormatDate } from "../../../utils"
+import { handleIncidentActiveColor, handleIncidentIcon, handleIncidentText, handleIncidentColor, handleIncidentActiveText, handleIncidentFormatDate, handleIncidentImage } from "../../../utils"
+
+import landSlide from '../../../assets/infowindow/landslide.svg'
 
 // El tipo de dato que va a recivir mi componente
 interface MapProps {
@@ -48,8 +50,11 @@ export const Map = ({ API_KEY, toggleDrawer, isOpenDrawer }: MapProps) => {
             const lng = latLng?.lng()
 
             // Abre el modal cuando hace click, siempre y cuando no halla un un marker activo
-            if (!activeMarker) toggleDrawer()
+            if (!activeMarker) {
+                toggleDrawer()
 
+                // LOGICA NECESARIA PARA MOSTRAR EL PUNTERO X DEFAULT CUANDO HACE CLICK EL USUARIO PARA CREAR UN REGISTRO
+            }
             // Agrega un marker cuando se hace click en el mapa, pero el Drawer
             // se encuentra cerrado, porque si no hago esta condicion
             // se va a agregar un marker cada vez que haga click en el mapa, inclusve
@@ -70,7 +75,7 @@ export const Map = ({ API_KEY, toggleDrawer, isOpenDrawer }: MapProps) => {
             onClick={handleOnClickMap}
             mapContainerStyle={{ width: "100vw", height: "calc(100vh - 93px)" }}
         >
-            {markers?.map(({ id, coords, incident_type, active, created_at }) => (
+            {markers?.map(({ id, coords, incident_type, active, created_at, name }) => (
                 <Marker
                     key={id}
                     position={coords}
@@ -82,22 +87,29 @@ export const Map = ({ API_KEY, toggleDrawer, isOpenDrawer }: MapProps) => {
                 >
                     {activeMarker === id ? (
                         <InfoWindow onCloseClick={() => setActiveMarker(null)}>
-                            <main className="p-2 flex flex-col">
-                                <h1 className={`text-base pb-2 font-bold ${handleIncidentColor(incident_type)}`}>
-                                    {handleIncidentText(incident_type)}
-                                </h1>
+                            <div className="w-full">
+                                <img src={handleIncidentImage(incident_type)} alt="landSlide" className="w-full rounded "/>
+                                <main className="p-2 flex flex-col">
+                                    <h1 className={`text-base pb-2 font-bold ${handleIncidentColor(incident_type)}`}>
+                                        {handleIncidentText(incident_type)}
+                                    </h1>
 
-                                <section>
-                                    <header className="flex gap-1">
-                                        <h3>Estado:</h3>
-                                        <p className={`font-bold ${handleIncidentActiveColor(active)}`}>{handleIncidentActiveText(active)}</p>
-                                    </header>
+                                    <section className="flex gap-1 flex-col">
+                                        <header className="flex gap-1">
+                                            <h3 className="font-semibold">Estado:</h3>
+                                            <p className={`font-bold ${handleIncidentActiveColor(active)}`}>{handleIncidentActiveText(active)}</p>
+                                        </header>
 
-                                    <div className="pt-1">
-                                        <p>{handleIncidentFormatDate(created_at)}</p>
-                                    </div>
-                                </section>
-                            </main>
+                                        <div className="font-semibold">
+                                            <p>{handleIncidentFormatDate(created_at)}</p>
+                                        </div>
+
+                                        <footer>
+                                            <p className="font-semibold">Creado por: {name}</p>
+                                        </footer>
+                                    </section>
+                                </main>
+                            </div>
                         </InfoWindow>
                     ) : null}
                 </Marker>

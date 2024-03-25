@@ -3,14 +3,25 @@ import Rain from '../assets/icons/rain.svg'
 import LandSlide from '../assets/icons/landslide.svg'
 import defaultIcon from '../assets/icons/default.png'
 
+import forestFireImg from '../assets/infowindow/forest_fire.svg'
+import landSlideImg from '../assets/infowindow/landslide.svg'
+import strongRainImg from '../assets/infowindow/strong_rains.svg'
+
+
+export const handleIncidentImage = (type: number) => {
+    if (type == 1) return forestFireImg
+    
+    if (type == 2) return landSlideImg
+
+    if (type == 3) return strongRainImg
+}
+
 export const handleIncidentText = (type: number) => {
     if (type == 1) return "Incendio"
 
     if (type == 2) return "Deslizamiento de tierras"
 
     if (type == 3) return "Fuertes lluvias"
-
-    return ""
 }
 
 export const handleIncidentColor = (type: number) => {
@@ -65,3 +76,4 @@ export const handleIncidentFormatDate = (date: Date) => {
 
     return result
 }
+
