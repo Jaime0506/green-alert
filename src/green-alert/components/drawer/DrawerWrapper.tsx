@@ -16,7 +16,7 @@ export const DrawerWrapper = ({ isOpenDrawer, children }: DrawerWrapperProps) =>
                     <motion.div
                         key="drawer"
                         initial={{ opacity: 0, width: 0 }}
-                        animate={{ opacity: 1, width: 550 }}
+                        animate={{ opacity: 1, width: 500 }}
                         exit={{ opacity: 0, width: 0 }}
                         transition={{ duration: .5 }}
                     >
