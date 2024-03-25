@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../hooks/useStore"
 
-import { Map, DrawerWrapper } from "../components"
+import { Map, DrawerWrapper, Form } from "../components"
 import { fetchDataIncidents } from "../../store/Incidents"
 
 // Esta es la manera en la que puedo llamar las variables de entorno
@@ -64,7 +64,7 @@ export const MapPage = () => {
             {/* Esto es simplemente el Envoltorio del Drawer, le paso los estados del isOpenDrawer para saber si debe mostrarse o no */}
             <DrawerWrapper isOpenDrawer={isOpenDrawer} toggleDrawer={toggleDrawer}>
                 {/* Lo que este aqui es todo lo que va a contener el Drawer */}
-                Pepe
+                <Form />
             </DrawerWrapper>
         </div>
     )
