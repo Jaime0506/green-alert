@@ -94,7 +94,7 @@ export const Map = ({ API_KEY, toggleDrawer, isOpenDrawer }: MapProps) => {
             onClick={handleOnClickMap}
             mapContainerStyle={{ width: "100vw", height: "calc(100vh - 93px)" }}
         >
-            {markers?.map(({ id, name, coords, incident_type }) => (
+            {markers?.map(({ id, coords, incident_type }) => (
                 <Marker
                     key={id}
                     position={coords}
