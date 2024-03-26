@@ -1,6 +1,15 @@
 import { Input, Select, SelectItem, Checkbox, Button } from "@nextui-org/react";
+import { useAppDispatch } from "../../../hooks/useStore";
+import { deleteCoords } from "../../../store/location/locationSlice";
 
 export function Form() {
+
+    const dispatch =  useAppDispatch()
+
+    const handleOnClick = () => {
+        dispatch(deleteCoords({lat:10, lng:-15}))
+    }
+
     const incidentes = [
         { value: "key1", label: "Incedio" },
         { value: "key2", label: "Deslizamiento" },
@@ -11,7 +20,7 @@ export function Form() {
     // para despues enviarlo a la base de datos
 
     const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
+        // event.preventDefault()
     }
 
     return (
@@ -57,7 +66,7 @@ export function Form() {
                     </div>
                 </div>
 
-                <Button
+                <Button onClick={handleOnClick} // Funcion anonima -> evita que se dispare la accion cuando se carga el comp
                     className="mt-7"
                     style={{ fontFamily: "Arial" }}
                     variant="shadow"

@@ -7,5 +7,5 @@ import  type { RootState, AppDispatch } from '../store/store'
 // aca puede encontrar mas info: https://redux-toolkit.js.org/tutorials/typescript
 
 // Ahi puede entender un poquito mas de como funciona
-export const useAppDispatch: () => AppDispatch = useDispatch
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
+export const useAppDispatch: () => AppDispatch = useDispatch // Hace las acciones
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector // Trae el estado

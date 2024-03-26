@@ -58,7 +58,7 @@ export const MapPage = () => {
                 los datos de lat y lng, puede que pete el codigo (pete = se rompa esa mrda)
             */}
             {lat !== null && lng !== null && (
-                <Map API_KEY={API_KEY} location={coords as { lat: number, lng: number }} toggleDrawer={toggleDrawer} isOpenDrawer={isOpenDrawer} />
+                <Map API_KEY={API_KEY} toggleDrawer={toggleDrawer} isOpenDrawer={isOpenDrawer} />
             )}
 
             {/* Esto es simplemente el Envoltorio del Drawer, le paso los estados del isOpenDrawer para saber si debe mostrarse o no */}
