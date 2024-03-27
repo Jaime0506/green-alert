@@ -86,7 +86,7 @@ export const Map = ({ API_KEY, toggleDrawer, isOpenDrawer }: MapProps) => {
       <GoogleMap
         onLoad={handleOnLoad}
         onClick={handleOnClickMap}
-        mapContainerStyle={{ width: "100vw", height: "calc(100vh - 93px)" }}
+        mapContainerStyle={{ width: "100vw", height: "calc(100vh - 111px)", borderRadius:"8px", boxShadow:"0 4px 6px rgba(0, 0, 0, 0.4)" }}
       >
         {markers?.map(
           ({ id, coords, incident_type, active, created_at, name }) => (

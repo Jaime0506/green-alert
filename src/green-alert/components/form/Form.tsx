@@ -24,7 +24,7 @@ export function Form() {
     return (
         <form action="submit" onSubmit={handleOnSubmit}>
             <div className="flex flex-col p-4 px-8 gap-6">
-                <h1 style={{ fontSize: "3.5rem", marginBottom: "15px" }}>GreenAlert</h1>
+                <h1 style={{ fontSize: "3.5rem", marginBottom: "15px" }} className="px-6">GreenAlert</h1>
 
                 <div className="flex flex-col gap-2 items-start mb-1">
                     <h1 style={{ color: "#17C964", textAlign: "left" }}>Nombre</h1>
@@ -65,7 +65,7 @@ export function Form() {
                 </div>
 
                 <Button  // Funcion anonima -> evita que se dispare la accion cuando se carga el comp
-                    className="mt-7"
+                    className="mt-5"
                     style={{ fontFamily: "Arial" }}
                     variant="shadow"
                     color="success"

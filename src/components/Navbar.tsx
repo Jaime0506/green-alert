@@ -5,7 +5,7 @@ export const Navbar = () => {
         <div className="bg-white flex p-6 px-16 items-center">
             <header className="flex-1">
                 <Link to='/' >
-                    <h1 className="font-bold text-[30px]">LOGO</h1>
+                    <h1 className="font-bold text-[30px] inline-block pr-6">LOGO</h1>
                 </Link>
             </header>
 
