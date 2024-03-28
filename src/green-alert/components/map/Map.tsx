@@ -71,7 +71,7 @@ export const Map = ({ API_KEY, toggleDrawer, isOpenDrawer }: MapProps) => {
       // se encuentra cerrado, porque si no hago esta condicion
       // se va a agregar un marker cada vez que haga click en el mapa, inclusve
       // cuando solo quiero cerrar el Drawer
-      if (!isOpenDrawer) {
+      if (!isOpenDrawer && !activeMarker) { // Agrega marcador cuando el drawer esta cerrado y no hay ninguna ventana de marcadores abierta
         const uuid = uuidv4()
 
         const newIncident: MarkerType = {
