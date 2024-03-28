@@ -1,11 +1,8 @@
 import { Input, Select, SelectItem, Checkbox, Button } from "@nextui-org/react";
-// import { useAppDispatch } from "../../../hooks/useStore";
-// import { deleteCoords } from "../../../store/location/locationSlice";
+import { useAppDispatch, useAppSelector } from "../../../hooks/useStore";
+import { updateIncident } from "../../../store/Incidents";
 
 export function Form() {
-
-    //const dispatch =  useAppDispatch()
-
 
     const incidentes = [
         { value: "key1", label: "Incedio" },
@@ -13,12 +10,27 @@ export function Form() {
         { value: "key3", label: "Lluvias fuertes" },
     ];
 
+    const { active } = useAppSelector(state => state.indicents)
+    const dispath = useAppDispatch()
+
     // TODO: Falta guardar los datos que se ingresen en los inputs, en un estado local
     // para despues enviarlo a la base de datos
 
     const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        // dispatch(deleteCoords({lat:10, lng:-15}))
+        
+        const name = "Sebastian yatra"
+
+        if (!active) {
+            return
+        }
+
+        const newData = {...active}
+
+        newData.name = name
+        newData.active = true
+
+        dispath(updateIncident(newData))
     }
 
     return (

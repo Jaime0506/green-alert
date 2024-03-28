@@ -6,7 +6,7 @@ import {
   useJsApiLoader,
 } from "@react-google-maps/api";
 
-import { useAppSelector } from "../../../hooks/useStore";
+import { useAppDispatch, useAppSelector } from "../../../hooks/useStore";
 import {
   handleIncidentActiveColor,
   handleIncidentIcon,
@@ -16,6 +16,10 @@ import {
   handleIncidentFormatDate,
   handleIncidentImage,
 } from "../../../utils";
+
+import { v4 as uuidv4 } from "uuid";
+import { addIncident, setActive } from "../../../store/Incidents";
+import { MarkerType } from "../../../types";
 
 // El tipo de dato que va a recivir mi componente
 interface MapProps {
@@ -29,9 +33,7 @@ export const Map = ({ API_KEY, toggleDrawer, isOpenDrawer }: MapProps) => {
     (state) => state.indicents
   );
 
-  const { coords } = useAppSelector((state) => state.location);
-  console.log(coords.lat , coords.lng)
-
+  const dispatch = useAppDispatch()
   // Aca uso el hook de la api de react-google-maps/api para conectarme
   // de manera automatica a los servicios de google, y cuando se conecte correctamente
   // isLoaded, tendra el valor de true, le paso los valores que necesita para funcionar
@@ -63,14 +65,28 @@ export const Map = ({ API_KEY, toggleDrawer, isOpenDrawer }: MapProps) => {
       // Abre el modal cuando hace click, siempre y cuando no halla un un marker activo
       if (!activeMarker) {
         toggleDrawer();
-
         // LOGICA NECESARIA PARA MOSTRAR EL PUNTERO X DEFAULT CUANDO HACE CLICK EL USUARIO PARA CREAR UN REGISTRO
       }
       // Agrega un marker cuando se hace click en el mapa, pero el Drawer
       // se encuentra cerrado, porque si no hago esta condicion
       // se va a agregar un marker cada vez que haga click en el mapa, inclusve
       // cuando solo quiero cerrar el Drawer
-      if (!isOpenDrawer) console.log(lat, lng);
+      if (!isOpenDrawer) {
+        const uuid = uuidv4()
+
+        const newIncident: MarkerType = {
+          id: uuid,
+          active: true,
+          coords: {
+            lat,
+            lng
+          },
+          incident_type: 0,
+        }
+
+        dispatch(addIncident(newIncident))
+        dispatch(setActive(newIncident))
+      }
     }
 
     setActiveMarker(null);
@@ -86,7 +102,7 @@ export const Map = ({ API_KEY, toggleDrawer, isOpenDrawer }: MapProps) => {
       <GoogleMap
         onLoad={handleOnLoad}
         onClick={handleOnClickMap}
-        mapContainerStyle={{ width: "100vw", height: "calc(100vh - 111px)", borderRadius:"8px", boxShadow:"0 4px 6px rgba(0, 0, 0, 0.4)" }}
+        mapContainerStyle={{ width: "100vw", height: "calc(100vh - 111px)", borderRadius: "8px", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.4)" }}
       >
         {markers?.map(
           ({ id, coords, incident_type, active, created_at, name }) => (
