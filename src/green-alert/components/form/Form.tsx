@@ -1,6 +1,7 @@
 import { Input, Select, SelectItem, Checkbox, Button } from "@nextui-org/react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useStore";
 import { updateIncident } from "../../../store/Incidents";
+import { uploadDataToDatabase } from "../../../store/Incidents/thunks";
 import { useState } from "react";
 
 export function Form() {
@@ -34,6 +35,8 @@ export function Form() {
     newData.incident_type = incidentType;
 
     dispath(updateIncident(newData));
+    uploadDataToDatabase(newData);
+    console.log("Hola")
   };
 
   return (
@@ -55,6 +58,7 @@ export function Form() {
             style={{ textAlign: "left", width: "300px" }}
             // Guarda el nombre en el estado cada vez que cambia
             onChange={(e) => setNameForm(e.target.value)}
+
           />
         </div>
 
