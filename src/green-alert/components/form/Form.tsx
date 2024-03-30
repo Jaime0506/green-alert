@@ -35,7 +35,7 @@ export function Form() {
     newData.incident_type = incidentType;
 
     dispath(updateIncident(newData));
-    uploadDataToDatabase(newData);
+    dispath(uploadDataToDatabase(newData));
     console.log("Hola")
   };
 
@@ -52,13 +52,16 @@ export function Form() {
         <div className="flex flex-col gap-2 items-start mb-1">
           <h1 style={{ color: "#17C964", textAlign: "left" }}>Nombre</h1>
           <Input
+            required
             type="text"
             placeholder="Nombre de usuario"
             labelPlacement="outside"
             style={{ textAlign: "left", width: "300px" }}
             // Guarda el nombre en el estado cada vez que cambia
             onChange={(e) => setNameForm(e.target.value)}
-
+            aria-label="Nombre de quien registra"
+            errorMessage="Se requieren todos los campos"
+            isInvalid
           />
         </div>
 
@@ -69,6 +72,7 @@ export function Form() {
 
           <div className="flex w-full flex-wrap items-end md:flex-nowrap mb-6 md:mb-0 gap-4">
             <Select
+              required
               labelPlacement="outside"
               placeholder="Seleccionar"
               className="max-w-xs"
@@ -77,7 +81,7 @@ export function Form() {
               onChange={(e) => {
                 setIncidentType(parseInt(e.target.value));
               }}
-              aria-selected
+              aria-label="Seleccionar incendio"
             >
               {incidentes.map((incidente) => (
                 <SelectItem key={incidente.value} value={incidente.value}>

@@ -21,7 +21,7 @@ export const fetchDataIncidents = () => {
     }
 }
 
-export const uploadDataToDatabase = (dataToUpload: Object) => {
+export const uploadDataToDatabase = (dataToUpload: MarkerType) => {
     return async () => {
         const { data, error } = await supabase.from('incidents_duplicate').insert(dataToUpload);
 
