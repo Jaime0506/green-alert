@@ -2,7 +2,7 @@ import { supabase } from "../../utils/supabase";
 
 import type { AppDispatch } from "../store";
 import type { MarkerType } from "../../types";
-import { loadIncidents } from ".";
+import { clearActiveIncident, clearIsLoading, deleteActiveIncident, loadIncidents, setIsLoading, updateIncident } from ".";
 
 export const fetchDataIncidents = () => {
   return async (dispatch: AppDispatch) => {
@@ -21,7 +21,10 @@ export const fetchDataIncidents = () => {
 };
 
 export const uploadDataToDatabase = (dataToUpload: MarkerType) => {
-  return async () => {
+  return async (dispatch: AppDispatch) => {
+
+    dispatch(setIsLoading())
+
     const { data, error } = await supabase
       .from("incidents_duplicate")
       .insert(dataToUpload);
@@ -29,24 +32,39 @@ export const uploadDataToDatabase = (dataToUpload: MarkerType) => {
     console.log("Soy base de datoss");
     if (error) {
       console.error("Error subiendo datos:", error.message);
+
+      dispatch(clearIsLoading())
+      dispatch(deleteActiveIncident())
       return;
     }
 
     console.log("Se subio exitosamente:", data);
+
+    dispatch(updateIncident(dataToUpload))
+    dispatch(clearActiveIncident())
   };
 };
 
-export const updateDataToDatabase = (dataToUpdate: MarkerType, id: string) => {
-  return async () => {
+export const updateDataToDatabase = (dataToUpdate: MarkerType) => {
+  return async (dispatch: AppDispatch) => {
+
+    dispatch(setIsLoading())
+
     const { data, error } = await supabase
       .from("incidents_duplicate")
       .update(dataToUpdate)
-      .eq("id", id);
+      .eq("id", dataToUpdate.id);
       
     if (error) {
       console.error("Error subiendo datos:", error.message);
+      dispatch(clearIsLoading())
+      dispatch(clearActiveIncident())
+
       return;
     }
+
+    dispatch(updateIncident(dataToUpdate))
+    dispatch(clearActiveIncident())
 
     console.log("Se subio exitosamente:", data);
   };

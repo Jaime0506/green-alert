@@ -1,5 +1,5 @@
 interface MarkerType {
-    active: true
+    active: boolean
     created_at?: Date
     id: string
     incident_type: number

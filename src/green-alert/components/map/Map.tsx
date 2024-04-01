@@ -18,26 +18,24 @@ import {
 } from "../../../utils";
 
 import { v4 as uuidv4 } from "uuid";
-import { addIncident, setActive } from "../../../store/Incidents";
+import { addIncident, clearActiveIncident, deleteActiveIncident, setActiveIncident } from "../../../store/Incidents";
 import { MarkerType } from "../../../types";
 
 // El tipo de dato que va a recivir mi componente
 interface MapProps {
   API_KEY: string;
   isOpenDrawer: boolean;
-  isOpenDrawerUpdate: boolean;
-  toggleDrawer: () => void;
-  toggleDrawerUpdate: () => void;
+  toggleDrawer: (type?: "edit") => void;
+  editing: boolean
 }
 
 export const Map = ({
   API_KEY,
   toggleDrawer,
-  toggleDrawerUpdate,
   isOpenDrawer,
-  isOpenDrawerUpdate,
+  editing
 }: MapProps) => {
-  const { loaded: loadedIncidents, markers } = useAppSelector(
+  const { loaded: loadedIncidents, markers, active } = useAppSelector(
     // Renombra loaded
     (state) => state.indicents
   );
@@ -72,22 +70,29 @@ export const Map = ({
       const lng = latLng?.lng();
 
       // Abre el modal cuando hace click, siempre y cuando no halla un un marker activo y el Form de actualizar este cerrado
-      if (!activeMarker && !isOpenDrawerUpdate) {
+      if (!activeMarker) {
         toggleDrawer();
         // LOGICA NECESARIA PARA MOSTRAR EL PUNTERO X DEFAULT CUANDO HACE CLICK EL USUARIO PARA CREAR UN REGISTRO
       }
 
-      if (isOpenDrawerUpdate && !isOpenDrawer && !activeMarker) {
-        // Cierra el modal del Form de actualizar cuando se haga click en el mapa y el Form esta abiert y el de registro esta cerrado y no hay marcadores activos
-        toggleDrawerUpdate();
+      if (isOpenDrawer && !active?.created_at && active?.id && !editing) {
+        dispatch(deleteActiveIncident())
       }
+
+      // Necesito condicionar, cuando se abre pa editar, pero no se hace nd
+      // necesito que limpie eso igualmente
+      if (isOpenDrawer && editing) {
+        dispatch(clearActiveIncident())
+      }
+
       // Agrega un marker cuando se hace click en el mapa, pero el Drawer
       // se encuentra cerrado, porque si no hago esta condicion
       // se va a agregar un marker cada vez que haga click en el mapa, inclusve
       // cuando solo quiero cerrar el Drawer
-      if (!isOpenDrawer && !activeMarker && !isOpenDrawerUpdate) {
+      if (!isOpenDrawer && !activeMarker && !active) {
         // Agrega marcador cuando el drawer esta cerrado y no hay ninguna ventana de marcadores abierta
         const uuid = uuidv4();
+        console.log("aca")
 
         const newIncident: MarkerType = {
           id: uuid,
@@ -100,33 +105,26 @@ export const Map = ({
         };
 
         dispatch(addIncident(newIncident));
-        dispatch(setActive(newIncident)); // Establece un marcador que contiene la info del ultimo marcador
+        dispatch(setActiveIncident(newIncident)); // Establece un marcador que contiene la info del ultimo marcador
       }
     }
 
     setActiveMarker(null);
   };
 
-  const handleOnDoubleClick = (
-    id: string,
-    coords: { lat: number; lng: number },
-    active: boolean,
-    incident_type: number,
-    name: string | undefined
-  ) => {
+  const handleOnDoubleClick = (id: string) => {
 
-    const incident: MarkerType = {
-      id,
-      coords,
-      active,
-      incident_type,
-      name,
-    };
+    const currentIncident = markers?.filter(marker => marker.id === id)[0]
 
-    if (!isOpenDrawer) {
-      toggleDrawerUpdate();
-      dispatch(setActive(incident)); // Establece un marcador que contiene la info del marcador en el que se hace doble click
+    console.log(currentIncident)
+
+    if (!isOpenDrawer && currentIncident) {
+      console.log("llego aca")
+      dispatch(setActiveIncident(currentIncident))
+      toggleDrawer("edit")
     }
+
+    setActiveMarker(null)
   };
 
   const handleActiveMarker = (id: string) => {
@@ -153,14 +151,14 @@ export const Map = ({
               position={coords}
               onClick={() => handleActiveMarker(id)}
               onDblClick={() => {
-                handleOnDoubleClick(id, coords, active, incident_type, name);
+                handleOnDoubleClick(id);
               }}
               icon={{
                 url: handleIncidentIcon(incident_type),
-                scaledSize: new window.google.maps.Size(30, 30),
+                scaledSize: new window.google.maps.Size(35, 35),
               }}
             >
-              {activeMarker === id ? (
+              {activeMarker === id && !isOpenDrawer ? (
                 <InfoWindow onCloseClick={() => setActiveMarker(null)}>
                   <div className="w-full">
                     <img

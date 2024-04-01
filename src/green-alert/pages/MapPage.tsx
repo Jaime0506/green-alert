@@ -4,9 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/useStore";
 import {
   Map,
   DrawerWrapper,
-  DrawerWrapperUpdate,
   Form,
-  FormUpdate,
 } from "../components";
 import { fetchDataIncidents } from "../../store/Incidents";
 
@@ -23,6 +21,7 @@ export const MapPage = () => {
   // el hook viene de RTK, y como solo tengo el estado location, simplemnte traigo lo que contega
   // dicho estado
   const { coords } = useAppSelector((state) => state.location);
+  
   const dispatch = useAppDispatch();
 
   // en este caso de mi estado location unicamente tiene la propiedad coords
@@ -33,18 +32,20 @@ export const MapPage = () => {
   // Y este es simplemente un estado para controlar si se encuentra abierto el Drawer o no
   // y pues para abrirlo o cerralo
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
-  const [isOpenDrawerUpdate, setIsOpenDrawerUpdate] = useState(false);
+  const [editing, setEditing] = useState(false)
 
   // Esta funcion se encarga de controlar si se abre o se cierra el Drawer,
   // por eso uso !value, porque si esta en true (abiert) lo cambio a false y si
   // se llama esta funcion cuando value es false entonces la cambia a true, por esto tambien el
   // nombre de la funcion toggle, palanca como la de una switche
-  const toggleDrawer = () => {
+  const toggleDrawer = (type?: "edit") => {
+    if (type == "edit") {
+      setEditing(true)
+    } else {
+      setEditing(false)
+    }
+    
     setIsOpenDrawer((value) => !value);
-  };
-
-  const toggleDrawerUpdate = () => {
-    setIsOpenDrawerUpdate((value) => !value);
   };
 
   // Cuando se monte el componente va a cargar en el estado global
@@ -72,18 +73,13 @@ export const MapPage = () => {
           API_KEY={API_KEY}
           toggleDrawer={toggleDrawer}
           isOpenDrawer={isOpenDrawer}
-          toggleDrawerUpdate={toggleDrawerUpdate}
-          isOpenDrawerUpdate={isOpenDrawerUpdate}
+          editing={editing}
         />
       )}
 
       {/* Esto es simplemente el Envoltorio del Drawer, le paso los estados del isOpenDrawer para saber si debe mostrarse o no */}
       <DrawerWrapper isOpenDrawer={isOpenDrawer}>
-        <Form />
-      </DrawerWrapper>
-
-      <DrawerWrapper isOpenDrawer={isOpenDrawerUpdate}>
-        <FormUpdate />
+        <Form toggleDrawer={toggleDrawer} editing={editing} />
       </DrawerWrapper>
     </div>
   );

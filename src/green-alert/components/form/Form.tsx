@@ -1,10 +1,15 @@
-import { Input, Select, SelectItem, Checkbox, Button } from "@nextui-org/react";
+import { Input, Select, SelectItem, Button } from "@nextui-org/react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useStore";
-import { updateIncident } from "../../../store/Incidents";
-import { uploadDataToDatabase } from "../../../store/Incidents/thunks";
+
+import { updateDataToDatabase, uploadDataToDatabase } from "../../../store/Incidents/thunks";
 import { useState } from "react";
 
-export function Form() {
+interface FormProps {
+  toggleDrawer: () => void
+  editing: boolean
+}
+
+export function Form({ toggleDrawer, editing }: FormProps) {
   const incidentes = [
     { value: 1, label: "Incedio" },
     { value: 2, label: "Deslizamiento" },
@@ -14,8 +19,9 @@ export function Form() {
   // variables que guardan la seleccion del nombre de usuario y el tipo de incidente
   const [nameForm, setNameForm] = useState("");
   const [incidentType, setIncidentType] = useState(0);
+  const [error, setError] = useState<string | null>(null)
 
-  const { active } = useAppSelector((state) => state.indicents);
+  const { active, isLoading } = useAppSelector((state) => state.indicents);
   const dispath = useAppDispatch();
 
   // TODO: Falta guardar los datos que se ingresen en los inputs, en un estado local
@@ -23,19 +29,43 @@ export function Form() {
 
   const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setError(null)
 
     if (!active) {
+      return;
+    }
+    console.log(nameForm.length)
+
+    if (nameForm.length === 0 && !editing) {
+      setError('El nombre no puede estar vacio')
+
+      return
+    }
+
+    if (!editing) {
+      const newData = { ...active };
+
+      newData.name = nameForm;
+      newData.active = true;
+      newData.incident_type = incidentType;
+
+      dispath(uploadDataToDatabase(newData));
+      toggleDrawer()
+
       return;
     }
 
     const newData = { ...active };
 
-    newData.name = nameForm;
-    newData.active = true;
-    newData.incident_type = incidentType;
+    newData.incident_type = incidentType
 
-    dispath(updateIncident(newData));
-    dispath(uploadDataToDatabase(newData));
+    if (newData.incident_type != active.incident_type) {
+      dispath(updateDataToDatabase(newData))
+    }
+    
+    toggleDrawer()
+    console.log(newData)
+
   };
 
   return (
@@ -48,18 +78,25 @@ export function Form() {
           GreenAlert
         </h1>
 
-        <div className="flex flex-col gap-2 items-start mb-1">
-          <h1 style={{ color: "#17C964", textAlign: "left" }}>Nombre</h1>
-          <Input
-            isRequired
-            type="text"
-            placeholder="Nombre de usuario"
-            labelPlacement="outside"
-            style={{ textAlign: "left", width: "300px" }}
-            // Guarda el nombre en el estado cada vez que cambia
-            onChange={(e) => setNameForm(e.target.value)}
-          />
-        </div>
+        {
+          !editing && (
+            <div className="flex flex-col gap-2 items-start mb-1">
+              <h1 style={{ color: "#17C964", textAlign: "left" }}>Nombre</h1>
+              <Input
+                type="text"
+                placeholder="Nombre de usuario"
+                labelPlacement="outside"
+                style={{ textAlign: "left", width: "300px" }}
+                // Guarda el nombre en el estado cada vez que cambia
+                onChange={(e) => setNameForm(e.target.value)}
+                aria-label="Nombre de usuario"
+                value={nameForm}
+                errorMessage={error && error}
+                isInvalid={!!error}
+              />
+            </div>
+          )
+        }
 
         <div className="flex flex-col gap-2">
           <h1 style={{ color: "#17C964", textAlign: "left" }}>
@@ -73,11 +110,12 @@ export function Form() {
               placeholder="Seleccionar"
               className="max-w-xs"
               style={{ width: "320px" }}
+              value={incidentType}
               // Establece el tipo de incidente segun si key definida en el array de objetos de incidentes
               onChange={(e) => {
                 setIncidentType(parseInt(e.target.value));
               }}
-              aria-selected
+              aria-label="Seleccionar incidente"
             >
               {incidentes.map((incidente) => (
                 <SelectItem key={incidente.value} value={incidente.value}>
@@ -89,13 +127,14 @@ export function Form() {
         </div>
 
         <Button // Funcion anonima -> evita que se dispare la accion cuando se carga el comp
-          className="mt-12"
+          className="mt-12 text-white"
           style={{ fontFamily: "Arial" }}
           variant="shadow"
           color="success"
           type="submit"
+          isLoading={isLoading}
         >
-          Registrar
+          { editing ? 'Guardar' : 'Registrar' }
         </Button>
       </div>
     </form>

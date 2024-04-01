@@ -1,7 +1,7 @@
 import MarkerFire from '../assets/icons/fire.svg'
 import Rain from '../assets/icons/rain.svg'
 import LandSlide from '../assets/icons/landslide.svg'
-import defaultIcon from '../assets/icons/default.png'
+import defaultIcon from '../assets/icons/InitMarker.svg'
 
 import forestFireImg from '../assets/infowindow/forest_fire.svg'
 import landSlideImg from '../assets/infowindow/landslide.svg'
