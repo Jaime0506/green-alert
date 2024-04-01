@@ -3,7 +3,6 @@ import { Drawer } from "."
 
 interface DrawerWrapperProps {
     isOpenDrawer: boolean
-    toggleDrawer: () => void
     children: React.ReactNode
 }
 
@@ -21,7 +20,7 @@ export const DrawerWrapper = ({ isOpenDrawer, children }: DrawerWrapperProps) =>
                         transition={{ duration: .5 }}
                     >
                         <Drawer>
-                            { children }
+                            {children}
                         </Drawer>
                     </motion.div>
                 )

@@ -1,10 +1,10 @@
-import { Input, Select, SelectItem, Checkbox, Button } from "@nextui-org/react";
+import { Select, SelectItem, Checkbox, Button } from "@nextui-org/react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useStore";
 import { updateIncident } from "../../../store/Incidents";
-import { uploadDataToDatabase } from "../../../store/Incidents/thunks";
+import { updateDataToDatabase } from "../../../store/Incidents/thunks";
 import { useState } from "react";
 
-export function Form() {
+export function FormUpdate() {
   const incidentes = [
     { value: 1, label: "Incedio" },
     { value: 2, label: "Deslizamiento" },
@@ -12,7 +12,6 @@ export function Form() {
   ];
 
   // variables que guardan la seleccion del nombre de usuario y el tipo de incidente
-  const [nameForm, setNameForm] = useState("");
   const [incidentType, setIncidentType] = useState(0);
 
   const { active } = useAppSelector((state) => state.indicents);
@@ -22,6 +21,7 @@ export function Form() {
   // para despues enviarlo a la base de datos
 
   const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    console.log('hola desde update')
     event.preventDefault();
 
     if (!active) {
@@ -29,44 +29,31 @@ export function Form() {
     }
 
     const newData = { ...active };
+    const id = newData.id
 
-    newData.name = nameForm;
     newData.active = true;
     newData.incident_type = incidentType;
 
     dispath(updateIncident(newData));
-    dispath(uploadDataToDatabase(newData));
+    dispath(updateDataToDatabase(newData, id))
   };
 
   return (
     <form action="submit" onSubmit={handleOnSubmit}>
-      <div className="flex flex-col p-4 px-8 gap-6">
+      <div className="flex flex-col p-4 px-8 gap-12">
         <h1
-          style={{ fontSize: "3.5rem", marginBottom: "15px" }}
+          style={{ fontSize: "3.5rem", marginBottom: "30px" }}
           className="px-6"
         >
           GreenAlert
         </h1>
 
-        <div className="flex flex-col gap-2 items-start mb-1">
-          <h1 style={{ color: "#17C964", textAlign: "left" }}>Nombre</h1>
-          <Input
-            isRequired
-            type="text"
-            placeholder="Nombre de usuario"
-            labelPlacement="outside"
-            style={{ textAlign: "left", width: "300px" }}
-            // Guarda el nombre en el estado cada vez que cambia
-            onChange={(e) => setNameForm(e.target.value)}
-          />
-        </div>
-
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 mb-6">
           <h1 style={{ color: "#17C964", textAlign: "left" }}>
             Tipo de Incidente
           </h1>
 
-          <div className="flex w-full flex-wrap items-end md:flex-nowrap mb-6 md:mb-0 gap-4">
+          <div className="flex w-full flex-wrap items-end md:flex-nowrap md:mb-0 gap-4">
             <Select
               isRequired
               labelPlacement="outside"
@@ -89,13 +76,13 @@ export function Form() {
         </div>
 
         <Button // Funcion anonima -> evita que se dispare la accion cuando se carga el comp
-          className="mt-12"
+          className="mt-20"
           style={{ fontFamily: "Arial" }}
           variant="shadow"
           color="success"
           type="submit"
         >
-          Registrar
+          Modificar
         </Button>
       </div>
     </form>

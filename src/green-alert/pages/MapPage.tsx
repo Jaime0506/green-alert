@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/useStore";
 
-import { Map, DrawerWrapper, Form } from "../components";
+import {
+  Map,
+  DrawerWrapper,
+  DrawerWrapperUpdate,
+  Form,
+  FormUpdate,
+} from "../components";
 import { fetchDataIncidents } from "../../store/Incidents";
 
 // Esta es la manera en la que puedo llamar las variables de entorno
@@ -27,6 +33,7 @@ export const MapPage = () => {
   // Y este es simplemente un estado para controlar si se encuentra abierto el Drawer o no
   // y pues para abrirlo o cerralo
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const [isOpenDrawerUpdate, setIsOpenDrawerUpdate] = useState(false);
 
   // Esta funcion se encarga de controlar si se abre o se cierra el Drawer,
   // por eso uso !value, porque si esta en true (abiert) lo cambio a false y si
@@ -34,6 +41,10 @@ export const MapPage = () => {
   // nombre de la funcion toggle, palanca como la de una switche
   const toggleDrawer = () => {
     setIsOpenDrawer((value) => !value);
+  };
+
+  const toggleDrawerUpdate = () => {
+    setIsOpenDrawerUpdate((value) => !value);
   };
 
   // Cuando se monte el componente va a cargar en el estado global
@@ -61,13 +72,18 @@ export const MapPage = () => {
           API_KEY={API_KEY}
           toggleDrawer={toggleDrawer}
           isOpenDrawer={isOpenDrawer}
+          toggleDrawerUpdate={toggleDrawerUpdate}
+          isOpenDrawerUpdate={isOpenDrawerUpdate}
         />
       )}
 
       {/* Esto es simplemente el Envoltorio del Drawer, le paso los estados del isOpenDrawer para saber si debe mostrarse o no */}
-      <DrawerWrapper isOpenDrawer={isOpenDrawer} toggleDrawer={toggleDrawer}>
-        {/* Lo que este aqui es todo lo que va a contener el Drawer */}
+      <DrawerWrapper isOpenDrawer={isOpenDrawer}>
         <Form />
+      </DrawerWrapper>
+
+      <DrawerWrapper isOpenDrawer={isOpenDrawerUpdate}>
+        <FormUpdate />
       </DrawerWrapper>
     </div>
   );

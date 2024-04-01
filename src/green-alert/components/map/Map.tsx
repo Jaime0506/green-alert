@@ -25,15 +25,24 @@ import { MarkerType } from "../../../types";
 interface MapProps {
   API_KEY: string;
   isOpenDrawer: boolean;
+  isOpenDrawerUpdate: boolean;
   toggleDrawer: () => void;
+  toggleDrawerUpdate: () => void;
 }
 
-export const Map = ({ API_KEY, toggleDrawer, isOpenDrawer }: MapProps) => {
-  const { loaded: loadedIncidents, markers } = useAppSelector( // Renombra loaded
+export const Map = ({
+  API_KEY,
+  toggleDrawer,
+  toggleDrawerUpdate,
+  isOpenDrawer,
+  isOpenDrawerUpdate,
+}: MapProps) => {
+  const { loaded: loadedIncidents, markers } = useAppSelector(
+    // Renombra loaded
     (state) => state.indicents
   );
 
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   // Aca uso el hook de la api de react-google-maps/api para conectarme
   // de manera automatica a los servicios de google, y cuando se conecte correctamente
   // isLoaded, tendra el valor de true, le paso los valores que necesita para funcionar
@@ -62,34 +71,62 @@ export const Map = ({ API_KEY, toggleDrawer, isOpenDrawer }: MapProps) => {
       const lat = latLng?.lat(); // Si existe llame la funcion
       const lng = latLng?.lng();
 
-      // Abre el modal cuando hace click, siempre y cuando no halla un un marker activo
-      if (!activeMarker) {
+      // Abre el modal cuando hace click, siempre y cuando no halla un un marker activo y el Form de actualizar este cerrado
+      if (!activeMarker && !isOpenDrawerUpdate) {
         toggleDrawer();
         // LOGICA NECESARIA PARA MOSTRAR EL PUNTERO X DEFAULT CUANDO HACE CLICK EL USUARIO PARA CREAR UN REGISTRO
+      }
+
+      if (isOpenDrawerUpdate && !isOpenDrawer && !activeMarker) {
+        // Cierra el modal del Form de actualizar cuando se haga click en el mapa y el Form esta abiert y el de registro esta cerrado y no hay marcadores activos
+        toggleDrawerUpdate();
       }
       // Agrega un marker cuando se hace click en el mapa, pero el Drawer
       // se encuentra cerrado, porque si no hago esta condicion
       // se va a agregar un marker cada vez que haga click en el mapa, inclusve
       // cuando solo quiero cerrar el Drawer
-      if (!isOpenDrawer && !activeMarker) { // Agrega marcador cuando el drawer esta cerrado y no hay ninguna ventana de marcadores abierta
-        const uuid = uuidv4()
+      if (!isOpenDrawer && !activeMarker && !isOpenDrawerUpdate) {
+        // Agrega marcador cuando el drawer esta cerrado y no hay ninguna ventana de marcadores abierta
+        const uuid = uuidv4();
 
         const newIncident: MarkerType = {
           id: uuid,
           active: true,
           coords: {
             lat,
-            lng
+            lng,
           },
-          incident_type: 0,
-        }
+          incident_type: 0, // Icono por defecto
+        };
 
-        dispatch(addIncident(newIncident))
-        dispatch(setActive(newIncident))
+        dispatch(addIncident(newIncident));
+        dispatch(setActive(newIncident)); // Establece un marcador que contiene la info del ultimo marcador
       }
     }
 
     setActiveMarker(null);
+  };
+
+  const handleOnDoubleClick = (
+    id: string,
+    coords: { lat: number; lng: number },
+    active: boolean,
+    incident_type: number,
+    name: string | undefined
+  ) => {
+
+    const incident: MarkerType = {
+      id,
+      coords,
+      active,
+      incident_type,
+      name,
+    };
+
+    if (!isOpenDrawer) {
+      toggleDrawerUpdate();
+      dispatch(setActive(incident)); // Establece un marcador que contiene la info del marcador en el que se hace doble click
+    }
   };
 
   const handleActiveMarker = (id: string) => {
@@ -102,7 +139,12 @@ export const Map = ({ API_KEY, toggleDrawer, isOpenDrawer }: MapProps) => {
       <GoogleMap
         onLoad={handleOnLoad}
         onClick={handleOnClickMap}
-        mapContainerStyle={{ width: "100vw", height: "calc(100vh - 111px)", borderRadius: "8px", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.4)" }}
+        mapContainerStyle={{
+          width: "100vw",
+          height: "calc(100vh - 111px)",
+          borderRadius: "8px",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.4)",
+        }}
       >
         {markers?.map(
           ({ id, coords, incident_type, active, created_at, name }) => (
@@ -110,6 +152,9 @@ export const Map = ({ API_KEY, toggleDrawer, isOpenDrawer }: MapProps) => {
               key={id}
               position={coords}
               onClick={() => handleActiveMarker(id)}
+              onDblClick={() => {
+                handleOnDoubleClick(id, coords, active, incident_type, name);
+              }}
               icon={{
                 url: handleIncidentIcon(incident_type),
                 scaledSize: new window.google.maps.Size(30, 30),

@@ -37,10 +37,9 @@ const IncidentsSlice = createSlice({
                 if (marker.id === action.payload.id) {
                     return action.payload
                 }
-
                 return marker
             })
-        }
+        },
     }
 })
 
