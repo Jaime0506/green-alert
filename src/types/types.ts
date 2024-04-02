@@ -1,9 +1,9 @@
 interface MarkerType {
-    active: true
-    created_at: Date
+    active: boolean
+    created_at?: Date
     id: string
     incident_type: number
-    name: string
+    name?: string
 
     coords: {
         lat: number,
