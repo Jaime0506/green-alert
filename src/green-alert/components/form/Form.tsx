@@ -1,12 +1,18 @@
 import { Input, Select, SelectItem, Button } from "@nextui-org/react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useStore";
 
-import { updateDataToDatabase, uploadDataToDatabase } from "../../../store/Incidents/thunks";
+import {
+  updateDataToDatabase,
+  uploadDataToDatabase,
+} from "../../../store/Incidents/thunks";
 import { useState } from "react";
 
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 interface FormProps {
-  toggleDrawer: () => void
-  editing: boolean
+  toggleDrawer: () => void;
+  editing: boolean;
 }
 
 export function Form({ toggleDrawer, editing }: FormProps) {
@@ -19,7 +25,7 @@ export function Form({ toggleDrawer, editing }: FormProps) {
   // variables que guardan la seleccion del nombre de usuario y el tipo de incidente
   const [nameForm, setNameForm] = useState("");
   const [incidentType, setIncidentType] = useState(0);
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null);
 
   const { active, isLoading } = useAppSelector((state) => state.indicents);
   const dispath = useAppDispatch();
@@ -29,17 +35,11 @@ export function Form({ toggleDrawer, editing }: FormProps) {
 
   const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError(null)
+    setError(null);
+    console.log(editing);
 
     if (!active) {
       return;
-    }
-    console.log(nameForm.length)
-
-    if (nameForm.length === 0 && !editing) {
-      setError('El nombre no puede estar vacio')
-
-      return
     }
 
     if (!editing) {
@@ -50,22 +50,43 @@ export function Form({ toggleDrawer, editing }: FormProps) {
       newData.incident_type = incidentType;
 
       dispath(uploadDataToDatabase(newData));
+
+      toast.success("Incidente registrado", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+
       toggleDrawer()
 
-      return;
+      return
     }
 
     const newData = { ...active };
 
-    newData.incident_type = incidentType
+    newData.incident_type = incidentType;
 
     if (newData.incident_type != active.incident_type) {
-      dispath(updateDataToDatabase(newData))
-    }
-    
-    toggleDrawer()
-    console.log(newData)
+      dispath(updateDataToDatabase(newData));
 
+      toast.success("Incidente modificado", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+
+      toggleDrawer();
+    }
   };
 
   return (
@@ -78,25 +99,23 @@ export function Form({ toggleDrawer, editing }: FormProps) {
           GreenAlert
         </h1>
 
-        {
-          !editing && (
-            <div className="flex flex-col gap-2 items-start mb-1">
-              <h1 style={{ color: "#17C964", textAlign: "left" }}>Nombre</h1>
-              <Input
-                type="text"
-                placeholder="Nombre de usuario"
-                labelPlacement="outside"
-                style={{ textAlign: "left", width: "300px" }}
-                // Guarda el nombre en el estado cada vez que cambia
-                onChange={(e) => setNameForm(e.target.value)}
-                aria-label="Nombre de usuario"
-                value={nameForm}
-                errorMessage={error && error}
-                isInvalid={!!error}
-              />
-            </div>
-          )
-        }
+        {!editing && (
+          <div className="flex flex-col gap-2 items-start mb-1">
+            <h1 style={{ color: "#17C964", textAlign: "left" }}>Nombre</h1>
+            <Input
+              type="text"
+              placeholder="Nombre de usuario"
+              labelPlacement="outside"
+              style={{ textAlign: "left", width: "300px" }}
+              // Guarda el nombre en el estado cada vez que cambia
+              onChange={(e) => setNameForm(e.target.value)}
+              aria-label="Nombre de usuario"
+              value={nameForm}
+              errorMessage={error && error}
+              isInvalid={!!error}
+            />
+          </div>
+        )}
 
         <div className="flex flex-col gap-2">
           <h1 style={{ color: "#17C964", textAlign: "left" }}>
@@ -134,7 +153,7 @@ export function Form({ toggleDrawer, editing }: FormProps) {
           type="submit"
           isLoading={isLoading}
         >
-          { editing ? 'Guardar' : 'Registrar' }
+          {editing ? "Guardar" : "Registrar"}
         </Button>
       </div>
     </form>

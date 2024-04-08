@@ -50,6 +50,8 @@ export const updateDataToDatabase = (dataToUpdate: MarkerType) => {
 
     dispatch(setIsLoading())
 
+    console.log('Subiennnndo')
+
     const { data, error } = await supabase
       .from("incidents_duplicate")
       .update(dataToUpdate)
