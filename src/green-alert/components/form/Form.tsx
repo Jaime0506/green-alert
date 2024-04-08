@@ -7,7 +7,7 @@ import {
 } from "../../../store/Incidents/thunks";
 import { useState } from "react";
 
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 interface FormProps {
@@ -49,6 +49,8 @@ export function Form({ toggleDrawer, editing }: FormProps) {
       newData.active = true;
       newData.incident_type = incidentType;
 
+      dispath(uploadDataToDatabase(newData));
+
       toast.success("Incidente registrado", {
         position: "top-center",
         autoClose: 3000,
@@ -60,8 +62,9 @@ export function Form({ toggleDrawer, editing }: FormProps) {
         theme: "light",
       });
 
-      dispath(uploadDataToDatabase(newData));
-      toggleDrawer();
+      toggleDrawer()
+
+      return
     }
 
     const newData = { ...active };
@@ -70,30 +73,24 @@ export function Form({ toggleDrawer, editing }: FormProps) {
 
     if (newData.incident_type != active.incident_type) {
       dispath(updateDataToDatabase(newData));
-      console.log(editing, "editing");
 
-      if(editing) {
-        console.log("editing  si");
-        toast.success("Incidente modificado", {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      }
+      toast.success("Incidente modificado", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+
+      toggleDrawer();
     }
-
-    toggleDrawer();
-    console.log(newData);
   };
 
   return (
     <form action="submit" onSubmit={handleOnSubmit}>
-      <ToastContainer />
       <div className="flex flex-col p-4 px-8 gap-6">
         <h1
           style={{ fontSize: "3.5rem", marginBottom: "15px" }}
