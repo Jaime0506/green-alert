@@ -1,11 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { MarkerType } from "../../types";
+import { IncidentType, MarkerType } from "../../types";
 
 interface initialStateProp {
     markers: MarkerType[] | undefined
     loaded: boolean
     active: MarkerType | undefined
+    listIncidentsType: IncidentType[] | undefined
     isLoading: boolean
 }
 
@@ -13,6 +14,7 @@ const initialState: initialStateProp = {
     markers: [],
     loaded: false,
     active: undefined,
+    listIncidentsType: [],
     isLoading: false
 }
 
@@ -55,14 +57,28 @@ const IncidentsSlice = createSlice({
         },
 
         setIsLoading: (state) => {
-            state.isLoading =  true
+            state.isLoading = true
         },
 
         clearIsLoading: (state) => {
             state.isLoading = false
+        },
+
+        loadIncidentsTypes: (state, action: PayloadAction<IncidentType[]>) => {
+            state.listIncidentsType = action.payload
         }
     }
 })
 
-export const { loadIncidents, addIncident, setActiveIncident, updateIncident, clearActiveIncident, deleteActiveIncident, setIsLoading, clearIsLoading } = IncidentsSlice.actions
+export const {
+    loadIncidents, 
+    addIncident, 
+    setActiveIncident, 
+    updateIncident, 
+    clearActiveIncident, 
+    deleteActiveIncident, 
+    setIsLoading, 
+    clearIsLoading, 
+    loadIncidentsTypes } = IncidentsSlice.actions
+
 export default IncidentsSlice.reducer

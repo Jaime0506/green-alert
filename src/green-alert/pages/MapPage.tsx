@@ -6,7 +6,7 @@ import {
   DrawerWrapper,
   Form,
 } from "../components";
-import { fetchDataIncidents } from "../../store/Incidents";
+import { fetchDataIncidentTypes, fetchDataIncidents } from "../../store/Incidents";
 
 // Esta es la manera en la que puedo llamar las variables de entorno
 // definidar en el archivo .env
@@ -21,7 +21,7 @@ export const MapPage = () => {
   // el hook viene de RTK, y como solo tengo el estado location, simplemnte traigo lo que contega
   // dicho estado
   const { coords } = useAppSelector((state) => state.location);
-  
+
   const dispatch = useAppDispatch();
 
   // en este caso de mi estado location unicamente tiene la propiedad coords
@@ -44,7 +44,7 @@ export const MapPage = () => {
     } else {
       setEditing(false)
     }
-    
+
     setIsOpenDrawer((value) => !value);
   };
 
@@ -54,6 +54,12 @@ export const MapPage = () => {
     dispatch(fetchDataIncidents());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Cuando se monte el componente va a cargar los tipos de incidente que existen en la base de datos
+  useEffect(() => {
+    dispatch(fetchDataIncidentTypes());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Aca simplemente va a mostrar un Cargando Ando mientras se carga los datos, porque puede que tarde mas de lo esperado
   // entonces se va a mostrar esto mientras, cuando ya se tengan los datos, react

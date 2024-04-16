@@ -11,17 +11,14 @@ interface MarkerType {
     }
 }
 
-interface MarkerTypeRequired {
-    active: true
-    created_at: Date
-    id: string
-    incident_type: number
+interface FormIncident {
     name: string
-
-    coords: {
-        lat: number,
-        lng: number
-    }
+    incident_type: number
 }
 
-export type { MarkerType, MarkerTypeRequired }
+interface IncidentType {
+    id: number,
+    name: string
+}
+
+export type { MarkerType, FormIncident, IncidentType }

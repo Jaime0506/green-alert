@@ -1,14 +1,14 @@
 import ReactDOM from 'react-dom/client'
 
-import GreenAlert from './GreenAlert.tsx'
-
-import './index.css'
-
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from './store/store.ts'
 import { ToastContainer } from 'react-toastify'
 
+import GreenAlert from './GreenAlert.tsx'
+
+import './index.css'
+import "react-toastify/dist/ReactToastify.css";
 
 //  Arranque de la aplicacion,
 // Eso del getElement root, etc. es de react, es lo basico que

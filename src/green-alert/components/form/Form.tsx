@@ -1,161 +1,113 @@
-import { Input, Select, SelectItem, Button } from "@nextui-org/react";
-import { useAppDispatch, useAppSelector } from "../../../hooks/useStore";
+import { Button } from "@nextui-org/react";
+// import { toast } from "react-toastify";
 
-import {
-  updateDataToDatabase,
-  uploadDataToDatabase,
-} from "../../../store/Incidents/thunks";
-import { useState } from "react";
+import { useAppSelector } from "../../../hooks/useStore";
+// import { updateDataToDatabase, uploadDataToDatabase } from "../../../store/Incidents/thunks";
 
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { useForm } from "../../../hooks/useForm";
+
+import { FormInputs } from "./FormInputs";
+import type { FormIncident } from "../../../types";
 
 interface FormProps {
-  toggleDrawer: () => void;
-  editing: boolean;
+    toggleDrawer: () => void;
+    editing: boolean;
 }
 
-export function Form({ toggleDrawer, editing }: FormProps) {
-  const incidentes = [
-    { value: 1, label: "Incedio" },
-    { value: 2, label: "Deslizamiento" },
-    { value: 3, label: "Lluvias fuertes" },
-  ];
+const initialStateForm: FormIncident = {
+    name: "",
+    incident_type: 0,
+}
 
-  // variables que guardan la seleccion del nombre de usuario y el tipo de incidente
-  const [nameForm, setNameForm] = useState("");
-  const [incidentType, setIncidentType] = useState(0);
-  const [error, setError] = useState<string | null>(null);
+export function Form({ editing }: FormProps) {
 
-  const { active, isLoading } = useAppSelector((state) => state.indicents);
-  const dispath = useAppDispatch();
+    const { formState, onChangeInputs, onSubmit } = useForm<FormIncident>({ initialStateForm })
+    // const [error, setError] = useState<string | null>(null);
 
-  // TODO: Falta guardar los datos que se ingresen en los inputs, en un estado local
-  // para despues enviarlo a la base de datos
+    const { listIncidentsType } = useAppSelector((state) => state.indicents);
+    // const dispath = useAppDispatch();
 
-  const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError(null);
-    console.log(editing);
+    // const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    //     event.preventDefault();
+    //     setError(null);
+    //     console.log(editing);
 
-    if (!active) {
-      return;
-    }
+    //     if (!active) {
+    //         return;
+    //     }
 
-    if (!editing) {
-      const newData = { ...active };
+    //     if (!editing) {
+    //         const newData = { ...active };
 
-      newData.name = nameForm;
-      newData.active = true;
-      newData.incident_type = incidentType;
+    //         newData.name = formState.name;
+    //         newData.active = true;
+    //         newData.incident_type = formState.incident_type;
 
-      dispath(uploadDataToDatabase(newData));
+    //         dispath(uploadDataToDatabase(newData));
 
-      toast.success("Incidente registrado", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+    //         toast.success("Incidente registrado", {
+    //             position: "top-center",
+    //             autoClose: 3000,
+    //             hideProgressBar: false,
+    //             closeOnClick: true,
+    //             pauseOnHover: true,
+    //             draggable: true,
+    //             progress: undefined,
+    //             theme: "light",
+    //         });
 
-      toggleDrawer()
+    //         toggleDrawer()
 
-      return
-    }
+    //         return
+    //     }
 
-    const newData = { ...active };
+    //     const newData = { ...active };
 
-    newData.incident_type = incidentType;
+    //     newData.incident_type = formState.incident_type;
 
-    if (newData.incident_type != active.incident_type) {
-      dispath(updateDataToDatabase(newData));
+    //     if (newData.incident_type != active.incident_type) {
+    //         dispath(updateDataToDatabase(newData));
 
-      toast.success("Incidente modificado", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+    //         toast.success("Incidente modificado", {
+    //             position: "top-center",
+    //             autoClose: 3000,
+    //             hideProgressBar: false,
+    //             closeOnClick: true,
+    //             pauseOnHover: true,
+    //             draggable: true,
+    //             progress: undefined,
+    //             theme: "light",
+    //         });
 
-      toggleDrawer();
-    }
-  };
+    //         toggleDrawer();
+    //     }
+    // };
+    if (!listIncidentsType) return <></>
 
-  return (
-    <form action="submit" onSubmit={handleOnSubmit}>
-      <div className="flex flex-col p-4 px-8 gap-6">
-        <h1
-          style={{ fontSize: "3.5rem", marginBottom: "15px" }}
-          className="px-6"
-        >
-          GreenAlert
-        </h1>
+    return (
+        <form action="submit" onSubmit={onSubmit}>
+            <div className="flex flex-col p-4 px-8 gap-6">
+                <h1 className="px-6 text-[3.5rem] mb-[15px]" >
+                    GreenAlert
+                </h1>
+                
+                <FormInputs 
+                    formState={formState}
+                    onChangeInputs={onChangeInputs} 
+                    listOfTypeIncidents={listIncidentsType}
+                />
 
-        {!editing && (
-          <div className="flex flex-col gap-2 items-start mb-1">
-            <h1 style={{ color: "#17C964", textAlign: "left" }}>Nombre</h1>
-            <Input
-              type="text"
-              placeholder="Nombre de usuario"
-              labelPlacement="outside"
-              style={{ textAlign: "left", width: "300px" }}
-              // Guarda el nombre en el estado cada vez que cambia
-              onChange={(e) => setNameForm(e.target.value)}
-              aria-label="Nombre de usuario"
-              value={nameForm}
-              errorMessage={error && error}
-              isInvalid={!!error}
-            />
-          </div>
-        )}
-
-        <div className="flex flex-col gap-2">
-          <h1 style={{ color: "#17C964", textAlign: "left" }}>
-            Tipo de Incidente
-          </h1>
-
-          <div className="flex w-full flex-wrap items-end md:flex-nowrap mb-6 md:mb-0 gap-4">
-            <Select
-              isRequired
-              labelPlacement="outside"
-              placeholder="Seleccionar"
-              className="max-w-xs"
-              style={{ width: "320px" }}
-              value={incidentType}
-              // Establece el tipo de incidente segun si key definida en el array de objetos de incidentes
-              onChange={(e) => {
-                setIncidentType(parseInt(e.target.value));
-              }}
-              aria-label="Seleccionar incidente"
-            >
-              {incidentes.map((incidente) => (
-                <SelectItem key={incidente.value} value={incidente.value}>
-                  {incidente.label}
-                </SelectItem>
-              ))}
-            </Select>
-          </div>
-        </div>
-
-        <Button // Funcion anonima -> evita que se dispare la accion cuando se carga el comp
-          className="mt-12 text-white"
-          style={{ fontFamily: "Arial" }}
-          variant="shadow"
-          color="success"
-          type="submit"
-          isLoading={isLoading}
-        >
-          {editing ? "Guardar" : "Registrar"}
-        </Button>
-      </div>
-    </form>
-  );
+                <Button // Funcion anonima -> evita que se dispare la accion cuando se carga el comp
+                    className="mt-12 text-white"
+                    style={{ fontFamily: "Arial" }}
+                    variant="shadow"
+                    color="success"
+                    type="submit"
+                // isLoading={isLoading}
+                >
+                    {editing ? "Guardar" : "Registrar"}
+                </Button>
+            </div>
+        </form>
+    );
 }
