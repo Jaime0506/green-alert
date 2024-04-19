@@ -69,10 +69,6 @@ export const MapPage = () => {
 
   return (
     <div className="border-t border-green-500 flex p-2">
-      {/* 
-                Y aca nuevamente cargo el componente <Map /> de manera condicional porque si se carga cuando aun no tengo
-                los datos de lat y lng, puede que pete el codigo (pete = se rompa esa mrda)
-            */}
 
       {lat !== null && lng !== null && (
         <Map
@@ -83,7 +79,6 @@ export const MapPage = () => {
         />
       )}
 
-      {/* Esto es simplemente el Envoltorio del Drawer, le paso los estados del isOpenDrawer para saber si debe mostrarse o no */}
       <DrawerWrapper isOpenDrawer={isOpenDrawer}>
         <Form toggleDrawer={toggleDrawer} editing={editing} />
       </DrawerWrapper>

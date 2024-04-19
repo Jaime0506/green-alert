@@ -1,6 +1,8 @@
 import { supabase } from "../../utils/supabase";
 import { clearActiveIncident, clearIsLoading, deleteActiveIncident, loadIncidents, loadIncidentsTypes, setIsLoading, updateIncident } from ".";
 
+import { handleToToastify } from "../../utils";
+
 import type { AppDispatch } from "../store";
 import type { MarkerType, IncidentType } from "../../types";
 
@@ -41,42 +43,45 @@ export const uploadDataToDatabase = (dataToUpload: MarkerType) => {
 
         dispatch(setIsLoading())
 
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from("incidents_duplicate")
             .insert(dataToUpload);
 
-        console.log("Soy base de datoss");
         if (error) {
             console.error("Error subiendo datos:", error.message);
 
             dispatch(clearIsLoading())
             dispatch(deleteActiveIncident())
+            
+            handleToToastify("upload", error)
+
             return;
         }
 
-        console.log("Se subio exitosamente:", data);
-
         dispatch(updateIncident(dataToUpload))
         dispatch(clearActiveIncident())
+
+        handleToToastify("upload", error)
     };
 };
 
 export const updateDataToDatabase = (dataToUpdate: MarkerType) => {
     return async (dispatch: AppDispatch) => {
-
+        
         dispatch(setIsLoading())
 
-        console.log('Subiennnndo')
-
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from("incidents_duplicate")
             .update(dataToUpdate)
             .eq("id", dataToUpdate.id);
 
         if (error) {
             console.error("Error subiendo datos:", error.message);
+
             dispatch(clearIsLoading())
             dispatch(clearActiveIncident())
+
+            handleToToastify("update", error)
 
             return;
         }
@@ -84,6 +89,6 @@ export const updateDataToDatabase = (dataToUpdate: MarkerType) => {
         dispatch(updateIncident(dataToUpdate))
         dispatch(clearActiveIncident())
 
-        console.log("Se subio exitosamente:", data);
+        handleToToastify("update", error)
     };
 };

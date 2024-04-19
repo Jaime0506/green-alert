@@ -11,7 +11,7 @@ export const LoginPage = () => {
     };
 
     return (
-        <main className="container">
+        <main className="container w-full">
             <div className="wrapper">
                 <form action="submit" onSubmit={handleOnSubmit}>
                     <h1>GreenAlert</h1>

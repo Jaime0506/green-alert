@@ -13,17 +13,16 @@ export const FormInputs = ({ onChangeInputs, formState, listOfTypeIncidents }: F
             <div className="flex flex-col gap-2 items-start mb-1 text-left">
                 <h1 style={{ color: "#17C964" }}>Nombre</h1>
                 <Input
+                    required
+                    isRequired
                     type="text"
                     placeholder="Nombre de usuario"
                     labelPlacement="outside"
                     style={{ textAlign: "left", width: "300px" }}
                     name="name"
-                    // Guarda el nombre en el estado cada vez que cambia
                     onChange={onChangeInputs}
                     aria-label="Nombre de usuario"
                     value={formState.name}
-                // errorMessage={error && error}
-                // isInvalid={!!error}
                 />
             </div>
 

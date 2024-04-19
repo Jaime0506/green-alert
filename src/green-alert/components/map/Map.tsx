@@ -69,21 +69,14 @@ export const Map = ({
       const lat = latLng?.lat(); // Si existe llame la funcion
       const lng = latLng?.lng();
 
-      // Abre el modal cuando hace click, siempre y cuando no halla un un marker activo y el Form de actualizar este cerrado
-      if (!activeMarker) {
-        toggleDrawer();
-        // LOGICA NECESARIA PARA MOSTRAR EL PUNTERO X DEFAULT CUANDO HACE CLICK EL USUARIO PARA CREAR UN REGISTRO
-      }
+      // Abre el modal cuando hace click, siempre y cuando no halla un un marker activo
+      if (!activeMarker) toggleDrawer()
 
       if (isOpenDrawer && !active?.created_at && active?.id && !editing) {
         dispatch(deleteActiveIncident())
       }
-
-      // Necesito condicionar, cuando se abre pa editar, pero no se hace nd
-      // necesito que limpie eso igualmente
-      if (isOpenDrawer && editing) {
-        dispatch(clearActiveIncident())
-      }
+      
+      if (isOpenDrawer && editing) dispatch(clearActiveIncident())
 
       // Agrega un marker cuando se hace click en el mapa, pero el Drawer
       // se encuentra cerrado, porque si no hago esta condicion
@@ -92,8 +85,6 @@ export const Map = ({
       if (!isOpenDrawer && !activeMarker && !active) {
         // Agrega marcador cuando el drawer esta cerrado y no hay ninguna ventana de marcadores abierta
         const uuid = uuidv4();
-        console.log("aca")
-
         const newIncident: MarkerType = {
           id: uuid,
           active: true,
@@ -116,11 +107,8 @@ export const Map = ({
 
     const currentIncident = markers?.filter(marker => marker.id === id)[0]
 
-    console.log(currentIncident)
-
     if (!isOpenDrawer && currentIncident) {
-      console.log("llego aca")
-      dispatch(setActiveIncident(currentIncident))
+      dispatch(setActiveIncident({...currentIncident}))
       toggleDrawer("edit")
     }
 
