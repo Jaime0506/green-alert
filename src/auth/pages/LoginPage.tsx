@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { BiSolidLockAlt } from "react-icons/bi";
 import { IoMail } from "react-icons/io5";
 
+import { Container } from "../../components";
+
 import "../styles/AuthStyles.css";
 
 export const LoginPage = () => {
@@ -11,8 +13,8 @@ export const LoginPage = () => {
     };
 
     return (
-        <main className="container">
-            <div className="wrapper">
+        <Container className="flex items-center justify-center">
+            <section className="wrapper" >
                 <form action="submit" onSubmit={handleOnSubmit}>
                     <h1>GreenAlert</h1>
 
@@ -45,7 +47,7 @@ export const LoginPage = () => {
                         </p>
                     </div>
                 </form>
-            </div>
-        </main>
+            </section>
+        </Container>
     );
 };
