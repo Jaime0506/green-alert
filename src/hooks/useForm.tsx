@@ -1,31 +1,17 @@
-import { useState } from "react"
-
-import { useAppDispatch, useAppSelector } from "./useStore"
 import { updateDataToDatabase, uploadDataToDatabase } from "../store/Incidents"
+import { FormIncident, MarkerType } from "../types"
+import { useAppDispatch, useAppSelector } from "./useStore"
 
-import type { MarkerType } from '../types'
-
-interface useFormProps<T> {
-    initialStateForm: T
+interface useFormProps {
     editing: boolean
     toggleDrawer: () => void
+    initialState: FormIncident
 }
 
-export const useForm = <T>({ initialStateForm, editing, toggleDrawer }: useFormProps<T>) => {
+export const useForm = ({ editing, toggleDrawer, initialState }: useFormProps) => {
 
     const active = useAppSelector(state => state.indicents.active)
     const dispatch = useAppDispatch()
-
-    const [initialState, setInitialState] = useState<T>(initialStateForm)
-
-    const onChangeInputs = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
-        setInitialState((prevState) => {
-            return {
-                ...prevState,
-                [e.target.name]: e.target.value
-            }
-        })
-    }
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -65,11 +51,6 @@ export const useForm = <T>({ initialStateForm, editing, toggleDrawer }: useFormP
     }
 
     return {
-        // Values
-        formState: initialState,
-
-        // Methods
-        onChangeInputs,
-        onSubmit,
+        onSubmit
     }
 }

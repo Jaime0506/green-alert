@@ -3,9 +3,10 @@ import { useAppSelector } from "../../../hooks/useStore";
 import { Button } from "@nextui-org/react";
 
 import { FormInputs } from "./FormInputs";
-import { useForm } from "../../../hooks/useForm";
+import { useFormValues } from "../../../hooks/useFormValues";
 
 import type { FormIncident } from "../../../types";
+import { useForm } from "../../../hooks/useForm";
 
 interface FormProps {
     toggleDrawer: () => void;
@@ -20,7 +21,9 @@ const initialStateForm: FormIncident = {
 export function Form({ editing, toggleDrawer }: FormProps) {
 
     const { listIncidentsType, isLoading } = useAppSelector((state) => state.indicents);
-    const { formState, onChangeInputs, onSubmit } = useForm<FormIncident>({ initialStateForm, editing, toggleDrawer })
+
+    const { formState, onChangeInputs } = useFormValues<FormIncident>({ initialStateForm })
+    const { onSubmit } = useForm({ editing, initialState: formState, toggleDrawer})
 
     if (!listIncidentsType) return null
 

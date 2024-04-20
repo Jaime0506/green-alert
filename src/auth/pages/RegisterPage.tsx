@@ -4,6 +4,7 @@ import { BiSolidLockAlt, BiSolidUser } from "react-icons/bi";
 import { IoMail } from "react-icons/io5";
 
 import "../styles/AuthStyles.css";
+import { Container } from "../../components";
 
 export const RegisterPage = () => {
     const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -12,8 +13,8 @@ export const RegisterPage = () => {
     };
 
     return (
-        <main className="container">
-            <div className="wrapper">
+        <Container className="flex items-center justify-center">
+            <section className="wrapper">
                 <form action="submit" onSubmit={handleOnSubmit}>
                     <h1>GreenAlert</h1>
 
@@ -47,7 +48,7 @@ export const RegisterPage = () => {
                         </p>
                     </div>
                 </form>
-            </div>
-        </main>
+            </section>
+        </Container>
     );
 };
