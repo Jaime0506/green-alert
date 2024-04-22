@@ -1,14 +1,14 @@
 import { updateDataToDatabase, uploadDataToDatabase } from "../store/Incidents"
-import { FormIncident, MarkerType } from "../types"
+import { MarkerType } from "../types"
 import { useAppDispatch, useAppSelector } from "./useStore"
 
-interface useFormProps {
+interface useFormProps<T> {
     editing: boolean
     toggleDrawer: () => void
-    initialState: FormIncident
+    initialState: T
 }
 
-export const useForm = ({ editing, toggleDrawer, initialState }: useFormProps) => {
+export const useFormIncidents = <T,>({ editing, toggleDrawer, initialState }: useFormProps<T>) => {
 
     const active = useAppSelector(state => state.indicents.active)
     const dispatch = useAppDispatch()
@@ -52,5 +52,6 @@ export const useForm = ({ editing, toggleDrawer, initialState }: useFormProps) =
 
     return {
         onSubmit
-    }
+    // }
+     } 
 }

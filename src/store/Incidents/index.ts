@@ -1,2 +1,2 @@
-export * from './IncidentsSlice'
+export * from './incidentsSlice'
 export * from './thunks'

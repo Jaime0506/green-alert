@@ -1,6 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
+
 import locationSlice from "./location/locationSlice";
-import IncidentsSlice from "./Incidents/IncidentsSlice";
+import incidentsSlice from "./Incidents/incidentsSlice";
+import authSlice from "./auth/authSlice";
 
 
 // Esta es la manera en que creo mi store, que es el que va a contener mi estado global
@@ -9,7 +11,8 @@ import IncidentsSlice from "./Incidents/IncidentsSlice";
 export const store = configureStore({
     reducer: {
         location: locationSlice,
-        indicents: IncidentsSlice
+        indicents: incidentsSlice,
+        auth: authSlice
     }
 })
 

@@ -16,9 +16,27 @@ interface FormIncident {
     incident_type: number
 }
 
+interface FormLogin {
+    email: string
+    password: string
+}
+
+interface FormRegister {
+    name: string
+    email: string
+    password: string
+}
+
 interface IncidentType {
     id: number,
     name: string
 }
 
-export type { MarkerType, FormIncident, IncidentType }
+interface AuthType {
+    status: "authenticated" | "not-authenticated" | "checking"
+    uid: string | null
+    user: object | null
+    errorMessage: string | null
+}
+
+export type { MarkerType, FormIncident, IncidentType, FormLogin, FormRegister, AuthType }

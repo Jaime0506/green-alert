@@ -6,7 +6,7 @@ import { FormInputs } from "./FormInputs";
 import { useFormValues } from "../../../hooks/useFormValues";
 
 import type { FormIncident } from "../../../types";
-import { useForm } from "../../../hooks/useForm";
+import { useFormIncidents } from "../../../hooks";
 
 interface FormProps {
     toggleDrawer: () => void;
@@ -23,7 +23,7 @@ export function Form({ editing, toggleDrawer }: FormProps) {
     const { listIncidentsType, isLoading } = useAppSelector((state) => state.indicents);
 
     const { formState, onChangeInputs } = useFormValues<FormIncident>({ initialStateForm })
-    const { onSubmit } = useForm({ editing, initialState: formState, toggleDrawer})
+    const { onSubmit } = useFormIncidents({ editing, initialState: formState, toggleDrawer})
 
     if (!listIncidentsType) return null
 
