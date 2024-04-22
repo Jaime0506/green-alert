@@ -6,7 +6,7 @@ import {
   DrawerWrapper,
   Form,
 } from "../components";
-import { fetchDataIncidentTypes, fetchDataIncidents } from "../../store/Incidents";
+import { fetchDataIncidentTypes, fetchDataIncidents } from "../../store/incidents";
 
 // Esta es la manera en la que puedo llamar las variables de entorno
 // definidar en el archivo .env

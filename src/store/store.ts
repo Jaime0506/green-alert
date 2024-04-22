@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import locationSlice from "./location/locationSlice";
-import incidentsSlice from "./Incidents/incidentsSlice";
+import incidentsSlice from "./incidents/incidentsSlice";
 import authSlice from "./auth/authSlice";
 
 

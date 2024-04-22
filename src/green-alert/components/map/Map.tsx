@@ -18,7 +18,7 @@ import {
 } from "../../../utils";
 
 import { v4 as uuidv4 } from "uuid";
-import { addIncident, clearActiveIncident, deleteActiveIncident, setActiveIncident } from "../../../store/Incidents";
+import { addIncident, clearActiveIncident, deleteActiveIncident, setActiveIncident } from "../../../store/incidents";
 import { MarkerType } from "../../../types";
 
 // El tipo de dato que va a recivir mi componente
