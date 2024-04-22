@@ -4,9 +4,9 @@ import { Button } from "@nextui-org/react";
 
 import { FormInputs } from "./FormInputs";
 import { useFormValues } from "../../../hooks/useFormValues";
+import { useFormIncidents } from "../../../hooks";
 
 import type { FormIncident } from "../../../types";
-import { useFormIncidents } from "../../../hooks";
 
 interface FormProps {
     toggleDrawer: () => void;

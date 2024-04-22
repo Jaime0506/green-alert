@@ -18,7 +18,7 @@ const initialState: initialStateProp = {
     isLoading: false
 }
 
-const IncidentsSlice = createSlice({
+const incidentsSlice = createSlice({
     name: 'incidents',
     initialState,
 
@@ -79,6 +79,6 @@ export const {
     deleteActiveIncident, 
     setIsLoading, 
     clearIsLoading, 
-    loadIncidentsTypes } = IncidentsSlice.actions
+    loadIncidentsTypes } = incidentsSlice.actions
 
-export default IncidentsSlice.reducer
+export default incidentsSlice.reducer

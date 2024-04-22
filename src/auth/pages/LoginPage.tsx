@@ -7,7 +7,7 @@ import { Container } from "../../components";
 import "../styles/AuthStyles.css";
 
 export const LoginPage = () => {
-    const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleOnSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log("Login Enviado");
     };

@@ -1,7 +1,7 @@
 import { BiSolidLockAlt, BiSolidUser } from "react-icons/bi"
 import { IoMail } from "react-icons/io5"
+
 import type { FormRegister } from "../../types"
-import React from "react"
 
 interface RegisterInputsProps {
     formState: FormRegister
