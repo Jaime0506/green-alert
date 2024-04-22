@@ -21,6 +21,7 @@ export const RegisterInputs = ({ formState, onChangeInputs }: RegisterInputsProp
                     name="name"
                     onChange={onChangeInputs}
                     value={formState.name}
+                    aria-label="Nombre de usuario"
                 ></input>
                 <BiSolidUser className="icon" />
             </div>
@@ -33,6 +34,7 @@ export const RegisterInputs = ({ formState, onChangeInputs }: RegisterInputsProp
                     name="email"
                     onChange={onChangeInputs}
                     value={formState.email}
+                    aria-label="Correo electronico"
                 ></input>
                 <IoMail className="icon" />
             </div>
@@ -45,6 +47,7 @@ export const RegisterInputs = ({ formState, onChangeInputs }: RegisterInputsProp
                     name="password"
                     onChange={onChangeInputs}
                     value={formState.password}
+                    aria-label="Correo electronico"
                 ></input>
                 <BiSolidLockAlt className="icon" />
             </div>

@@ -35,7 +35,10 @@ interface IncidentType {
 interface AuthType {
     status: "authenticated" | "not-authenticated" | "checking"
     uid: string | null
-    user: object | null
+    user: {
+        email: string | undefined
+        name: string | undefined
+    } | undefined
     errorMessage: string | null
 }
 

@@ -4,7 +4,10 @@ import type { AuthType } from '../../types';
 const initialState: AuthType = {
     status: "not-authenticated",
     uid: null,
-    user: null,
+    user: {
+        email: undefined,
+        name: undefined
+    },
     errorMessage: null
 }
 
@@ -13,12 +16,26 @@ const authSlice = createSlice({
     initialState,
 
     reducers: {
-        login: (state, actions: PayloadAction<object>) => {
-            state.user = actions.payload
-        }
+        checking: (state) => {
+            state.status = "checking"
+        },
+
+        login: (state, action: PayloadAction<AuthType>) => {
+            state.status = action.payload.status
+            state.uid = action.payload.uid
+            state.user = action.payload.user
+            state.errorMessage = action.payload.errorMessage
+        },
+
+        logout: (state) => {
+            state.status = "not-authenticated"
+            state.uid = null
+            state.user = undefined
+            state.errorMessage = null
+        },
     },
 });
 
-export const { login } = authSlice.actions;
+export const { login, logout, checking } = authSlice.actions;
 
 export default authSlice.reducer

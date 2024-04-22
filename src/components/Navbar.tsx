@@ -1,6 +1,19 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { useAppDispatch, useAppSelector } from "../hooks"
+import { Button } from "@nextui-org/react"
+import { onLogoutUser } from "../store/auth"
 
 export const Navbar = () => {
+
+    const { status } = useAppSelector(state => state.auth)
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
+
+    const handleOnClick = () => {
+        dispatch(onLogoutUser())
+        navigate("/")
+    }
+
     return (
         <div className="bg-white flex p-6 px-16 items-center">
             <header className="flex-1">
@@ -11,16 +24,30 @@ export const Navbar = () => {
 
             <section className="text-xl">
                 <nav>
-                    <ul className="flex gap-6">
+                    <ul className="flex gap-6 items-center">
                         <li>
                             <Link to="/map">Mapa</Link>
                         </li>
-                        <li>
-                            <Link to="/auth/login">Inicia sesion</Link>
-                        </li>
-                        <li>
-                            <Link to="/auth/register">Registrate</Link>
-                        </li>
+
+                        {status === "authenticated" ? (
+                            <li>
+                                <Button
+                                    onClick={handleOnClick}
+                                    color="danger"
+                                >
+                                    Cerrar sesion
+                                </Button>
+                            </li>
+                        ) : (
+                            <>
+                                <li>
+                                    <Link to="/auth/login">Inicia sesion</Link>
+                                </li>
+                                <li>
+                                    <Link to="/auth/register">Registrate</Link>
+                                </li>
+                            </>
+                        )}
                     </ul>
                 </nav>
             </section>
