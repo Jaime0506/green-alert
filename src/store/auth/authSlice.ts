@@ -8,9 +8,10 @@ const initialState: AuthType = {
     errorMessage: null
 }
 
-export const authSlice = createSlice({
+const authSlice = createSlice({
     name: 'auth',
-    initialState: initialState,
+    initialState,
+
     reducers: {
         login: (state, actions: PayloadAction<object>) => {
             state.user = actions.payload

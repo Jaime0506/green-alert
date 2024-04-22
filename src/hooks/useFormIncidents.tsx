@@ -1,3 +1,4 @@
+
 import { updateDataToDatabase, uploadDataToDatabase } from "../store/incidents"
 import { MarkerType } from "../types"
 import { useAppDispatch, useAppSelector } from "./useStore"
