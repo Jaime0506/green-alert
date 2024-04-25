@@ -1,7 +1,12 @@
-import { Input, Select, SelectItem } from "@nextui-org/react"
-import type { FormIncident, IncidentType } from "../../../types"
-import { useAppSelector } from "../../../hooks"
 import React, { useState } from "react"
+import { Input, Select, SelectItem } from "@nextui-org/react"
+import { v4 as uuidv4 } from 'uuid'
+
+import { useAppSelector } from "../../../hooks"
+import { supabase } from "../../../utils/supabase"
+
+import type { FileObject } from '@supabase/storage-js'
+import type { FormIncident, IncidentType } from "../../../types"
 
 interface FormInputsProps {
     onChangeInputs: (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => void
@@ -12,7 +17,12 @@ interface FormInputsProps {
 export const FormInputs = ({ onChangeInputs, formState, listOfTypeIncidents }: FormInputsProps) => {
 
     const { uid } = useAppSelector(state => state.auth)
+    const { active } = useAppSelector(state => state.indicents)
+
     const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null)
+    const [media, setMedia] = useState<FileObject[]>([])
+
+    // const [loading, setLoading] = useState(false)
 
     const handleChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files
@@ -23,13 +33,49 @@ export const FormInputs = ({ onChangeInputs, formState, listOfTypeIncidents }: F
 
             return
         }
-        
-        console.log(files, uid)
+
         setSelectedFiles(files)
+        // setLoading(true)
+
+        uploadImage()
     }
 
+    const uploadImage = async () => {
+        if (selectedFiles === null || uid === null || active === undefined) return
+
+        console.log("entre")
+
+        const { error } = await supabase
+            .storage
+            .from('test')
+            .upload(uid + "/" + active.id + "/" + uuidv4(), selectedFiles[0])
+
+        if (error) return console.log(error)
+
+        await getMedia()
+    }
+
+    const getMedia = async () => {
+        const { data, error } = await supabase.storage.from('test').list(uid + "/" + active?.id, {
+            limit: 10,
+            offset: 0,
+            sortBy: {
+                column: 'name', order: 'asc'
+            }
+        })
+
+        if (error) return console.log(error)
+
+        if (data) {
+            setMedia(data)
+
+            console.log(data)
+        }
+    }
+
+
     return (
-        <>
+        <section className="flex flex-col flex-1 gap-4">
             <div className="flex flex-col gap-2 items-start mb-1 text-left">
                 <h1 style={{ color: "#17C964" }}>Nombre</h1>
                 <Input
@@ -78,24 +124,28 @@ export const FormInputs = ({ onChangeInputs, formState, listOfTypeIncidents }: F
                 </h1>
 
                 <div className="flex w-full flex-col flex-wrap items md:flex-nowrap mb-6 md:mb-0 gap-4 text-left">
-                    <input 
-                        type="file" 
-                        name="image" 
-                        onChange={handleChangeFile} 
-                        multiple
-                        className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100" 
-                    />
-
-                    {
-                        selectedFiles && Array.from(selectedFiles).map((file, index) => (
-                        <li key={index} >
-                            {index}{file.name}
-                        </li>
-                    ))}
-
+                    <div className="flex items-center justify-center w-full">
+                        <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 h-[110px]">
+                            <div className="flex flex-col items-center justify-center">
+                                <svg className="w-8 h-8 mb-2 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                </svg>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF</p>
+                            </div>
+                            <input id="dropzone-file" type="file" className="hidden" multiple onChange={handleChangeFile} />
+                        </label>
+                    </div>
                 </div>
+
+                {
+                    media && media.map((media, index) => (
+                        <div key={index}>
+                            <img src={`https://ohcjcommgokajjptkmhd.supabase.co/storage/v1/object/public/test/${uid}/${active?.id}/${media.name}`} className="w-full" />
+                        </div>
+                    ))
+                }
             </div>
-        </>
+        </section>
     )
 }
 
