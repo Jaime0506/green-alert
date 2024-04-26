@@ -1,9 +1,10 @@
 import { supabase } from "../../utils/supabase";
 import { clearActiveIncident, clearIsLoading, deleteActiveIncident, loadIncidents, loadIncidentsTypes, setIsLoading, updateIncident } from ".";
 
-import { handleToToastify } from "../../utils";
+import { handleToToastify, uploadFile } from "../../utils";
 
-import type { AppDispatch } from "../store";
+import type { FileObject } from '@supabase/storage-js'
+import type { AppDispatch, RootState } from "../store";
 import type { MarkerType, IncidentType } from "../../types";
 
 export const fetchDataIncidentTypes = () => {
@@ -92,3 +93,28 @@ export const updateDataToDatabase = (dataToUpdate: MarkerType) => {
         handleToToastify("update", error)
     };
 };
+
+export const uploadImages = (files: FileList) => {
+    return async (dispatch: AppDispatch, getState: () => RootState) => {
+        
+        console.log("Me llamaron")
+
+        const { auth, incidents } = getState()
+
+        const { active } = incidents
+        const { uid } = auth
+
+        if (!uid) return console.log("No existe una sesion iniciada")
+
+        if (!active?.id) return console.log("No existe un incidente activo")
+
+        const updateFilePromise: Promise<string | false>[] = []
+
+        for (const file of files) {
+            updateFilePromise.push(uploadFile(file, uid, active.id))
+        }
+
+        const imagesPath = await Promise.all(updateFilePromise)
+        console.log(imagesPath)
+    }
+}

@@ -11,7 +11,7 @@ import authSlice from "./auth/authSlice";
 export const store = configureStore({
     reducer: {
         location: locationSlice,
-        indicents: incidentsSlice,
+        incidents: incidentsSlice,
         auth: authSlice
     }
 })

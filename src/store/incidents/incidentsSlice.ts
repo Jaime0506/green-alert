@@ -66,6 +66,10 @@ const incidentsSlice = createSlice({
 
         loadIncidentsTypes: (state, action: PayloadAction<IncidentType[]>) => {
             state.listIncidentsType = action.payload
+        },
+
+        addImage: (state, action: PayloadAction<string[]>) => {
+            state.active.images = [...action.payload]
         }
     }
 })
@@ -79,6 +83,8 @@ export const {
     deleteActiveIncident, 
     setIsLoading, 
     clearIsLoading, 
-    loadIncidentsTypes } = incidentsSlice.actions
+    loadIncidentsTypes,
+    addImage
+} = incidentsSlice.actions
 
 export default incidentsSlice.reducer

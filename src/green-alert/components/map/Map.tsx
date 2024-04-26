@@ -37,7 +37,7 @@ export const Map = ({
 }: MapProps) => {
   const { loaded: loadedIncidents, markers, active } = useAppSelector(
     // Renombra loaded
-    (state) => state.indicents
+    (state) => state.incidents
   );
 
   const dispatch = useAppDispatch();
@@ -93,6 +93,7 @@ export const Map = ({
             lng,
           },
           incident_type: 0, // Icono por defecto
+          images: []
         };
 
         dispatch(addIncident(newIncident));

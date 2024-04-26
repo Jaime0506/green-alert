@@ -11,7 +11,7 @@ interface useFormProps<T> {
 
 export const useFormIncidents = <T,>({ editing, toggleDrawer, initialState }: useFormProps<T>) => {
 
-    const active = useAppSelector(state => state.indicents.active)
+    const active = useAppSelector(state => state.incidents.active)
     const dispatch = useAppDispatch()
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {

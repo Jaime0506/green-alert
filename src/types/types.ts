@@ -4,11 +4,11 @@ interface MarkerType {
     id: string
     incident_type: number
     name?: string
-
     coords: {
         lat: number,
         lng: number
     }
+    images: string[]
 }
 
 interface FormIncident {
