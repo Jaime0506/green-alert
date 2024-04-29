@@ -5,7 +5,7 @@ import { IncidentType, MarkerType } from "../../types";
 interface initialStateProp {
     markers: MarkerType[] | undefined
     loaded: boolean
-    active: MarkerType | undefined
+    active: MarkerType
     listIncidentsType: IncidentType[] | undefined
     isLoading: boolean
 }
@@ -13,12 +13,21 @@ interface initialStateProp {
 const initialState: initialStateProp = {
     markers: [],
     loaded: false,
-    active: undefined,
+    active: {
+        active: false,
+        id: "",
+        incident_type: 0,
+        coords: {
+            lat: 0,
+            lng: 0,
+        },
+        images: []
+    },
     listIncidentsType: [],
     isLoading: false
 }
 
-const IncidentsSlice = createSlice({
+const incidentsSlice = createSlice({
     name: 'incidents',
     initialState,
 
@@ -48,12 +57,12 @@ const IncidentsSlice = createSlice({
         },
 
         clearActiveIncident: (state) => {
-            state.active = undefined
+            state.active = initialState.active
         },
 
         deleteActiveIncident: (state) => {
             state.markers = state.markers?.filter((marker) => marker.id != state.active?.id)
-            state.active = undefined
+            state.active = initialState.active
         },
 
         setIsLoading: (state) => {
@@ -66,6 +75,11 @@ const IncidentsSlice = createSlice({
 
         loadIncidentsTypes: (state, action: PayloadAction<IncidentType[]>) => {
             state.listIncidentsType = action.payload
+        },
+
+        addImage: (state, action: PayloadAction<string[]>) => {
+            state.active.images = [...state.active.images, ...action.payload]
+            state.isLoading = false
         }
     }
 })
@@ -79,6 +93,8 @@ export const {
     deleteActiveIncident, 
     setIsLoading, 
     clearIsLoading, 
-    loadIncidentsTypes } = IncidentsSlice.actions
+    loadIncidentsTypes,
+    addImage
+} = incidentsSlice.actions
 
-export default IncidentsSlice.reducer
+export default incidentsSlice.reducer

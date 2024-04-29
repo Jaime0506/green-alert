@@ -1,16 +1,17 @@
-import { updateDataToDatabase, uploadDataToDatabase } from "../store/Incidents"
-import { FormIncident, MarkerType } from "../types"
+
+import { updateDataToDatabase, uploadDataToDatabase } from "../store/incidents"
+import { MarkerType } from "../types"
 import { useAppDispatch, useAppSelector } from "./useStore"
 
-interface useFormProps {
+interface useFormProps<T> {
     editing: boolean
     toggleDrawer: () => void
-    initialState: FormIncident
+    initialState: T
 }
 
-export const useForm = ({ editing, toggleDrawer, initialState }: useFormProps) => {
+export const useFormIncidents = <T,>({ editing, toggleDrawer, initialState }: useFormProps<T>) => {
 
-    const active = useAppSelector(state => state.indicents.active)
+    const active = useAppSelector(state => state.incidents.active)
     const dispatch = useAppDispatch()
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -52,5 +53,6 @@ export const useForm = ({ editing, toggleDrawer, initialState }: useFormProps) =
 
     return {
         onSubmit
-    }
+    // }
+     } 
 }

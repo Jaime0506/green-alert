@@ -1,36 +1,38 @@
 import { Link } from "react-router-dom";
-import { BiSolidLockAlt } from "react-icons/bi";
-import { IoMail } from "react-icons/io5";
 
 import { Container } from "../../components";
 
 import "../styles/AuthStyles.css";
+import { useAppDispatch, useFormValues } from "../../hooks";
+import { FormLogin } from "../../types";
+import { LoginInputs } from "../components";
+import { onLoginUser } from "../../store/auth";
+
+const initialStateForm: FormLogin = {
+    email: "",
+    password: ""
+}
 
 export const LoginPage = () => {
-    const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+    const dispatch = useAppDispatch()
+    const { formState, onChangeInputs } = useFormValues({ initialStateForm })
+
+    const handleOnSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Login Enviado");
+
+        dispatch(onLoginUser(formState))
     };
 
     return (
         <Container className="flex items-center justify-center">
             <section className="wrapper" >
                 <form action="submit" onSubmit={handleOnSubmit}>
-                    <h1>GreenAlert</h1>
-
-                    <div className="input-box">
-                        <input
-                            type="text"
-                            placeholder="Correo electronico"
-                            required
-                        ></input>
-                        <IoMail className="icon" />
-                    </div>
-
-                    <div className="input-box">
-                        <input type="password" placeholder="Contraseña" required></input>
-                        <BiSolidLockAlt className="icon" />
-                    </div>
+                    
+                    <LoginInputs 
+                        formState={formState}
+                        onChangeInputs={onChangeInputs}
+                    />
 
                     <button type="submit">Iniciar sesion</button>
 

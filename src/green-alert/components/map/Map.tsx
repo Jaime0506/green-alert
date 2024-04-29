@@ -18,10 +18,10 @@ import {
 } from "../../../utils";
 
 import { v4 as uuidv4 } from "uuid";
-import { addIncident, clearActiveIncident, deleteActiveIncident, setActiveIncident } from "../../../store/Incidents";
-import { MarkerType } from "../../../types";
+import { addIncident, cancelActiveIncident, clearActiveIncident, deleteActiveIncident, setActiveIncident } from "../../../store/incidents";
 
-// El tipo de dato que va a recivir mi componente
+import type { MarkerType } from "../../../types";
+
 interface MapProps {
   API_KEY: string;
   isOpenDrawer: boolean;
@@ -37,7 +37,7 @@ export const Map = ({
 }: MapProps) => {
   const { loaded: loadedIncidents, markers, active } = useAppSelector(
     // Renombra loaded
-    (state) => state.indicents
+    (state) => state.incidents
   );
 
   const dispatch = useAppDispatch();
@@ -72,7 +72,8 @@ export const Map = ({
       // Abre el modal cuando hace click, siempre y cuando no halla un un marker activo
       if (!activeMarker) toggleDrawer()
 
-      if (isOpenDrawer && !active?.created_at && active?.id && !editing) {
+      if (isOpenDrawer && !active?.created_at && active?.id.length > 0 && !editing) {
+        dispatch(cancelActiveIncident(active))
         dispatch(deleteActiveIncident())
       }
       
@@ -82,7 +83,7 @@ export const Map = ({
       // se encuentra cerrado, porque si no hago esta condicion
       // se va a agregar un marker cada vez que haga click en el mapa, inclusve
       // cuando solo quiero cerrar el Drawer
-      if (!isOpenDrawer && !activeMarker && !active) {
+      if (!isOpenDrawer && !activeMarker && !(active.id.length > 0)) {
         // Agrega marcador cuando el drawer esta cerrado y no hay ninguna ventana de marcadores abierta
         const uuid = uuidv4();
         const newIncident: MarkerType = {
@@ -93,6 +94,7 @@ export const Map = ({
             lng,
           },
           incident_type: 0, // Icono por defecto
+          images: []
         };
 
         dispatch(addIncident(newIncident));

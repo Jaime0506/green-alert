@@ -4,9 +4,9 @@ import { Button } from "@nextui-org/react";
 
 import { FormInputs } from "./FormInputs";
 import { useFormValues } from "../../../hooks/useFormValues";
+import { useFormIncidents } from "../../../hooks";
 
 import type { FormIncident } from "../../../types";
-import { useForm } from "../../../hooks/useForm";
 
 interface FormProps {
     toggleDrawer: () => void;
@@ -20,17 +20,17 @@ const initialStateForm: FormIncident = {
 
 export function Form({ editing, toggleDrawer }: FormProps) {
 
-    const { listIncidentsType, isLoading } = useAppSelector((state) => state.indicents);
+    const { listIncidentsType, isLoading } = useAppSelector((state) => state.incidents);
 
     const { formState, onChangeInputs } = useFormValues<FormIncident>({ initialStateForm })
-    const { onSubmit } = useForm({ editing, initialState: formState, toggleDrawer})
+    const { onSubmit } = useFormIncidents({ editing, initialState: formState, toggleDrawer})
 
     if (!listIncidentsType) return null
 
     return (
-        <form action="submit" onSubmit={onSubmit}>
-            <div className="flex flex-col p-4 px-8 gap-6">
-                <h1 className="px-6 text-[3.5rem] mb-[15px]" >
+        <form action="submit" onSubmit={onSubmit} className="border border-purple-500">
+            <div className="flex flex-col p-4 px-8 gap-3" style={{ maxHeight: "100vh",  }}>
+                <h1 className="px-6 text-[3.5rem]" >
                     GreenAlert
                 </h1>
                 
@@ -41,7 +41,7 @@ export function Form({ editing, toggleDrawer }: FormProps) {
                 />
 
                 <Button // Funcion anonima -> evita que se dispare la accion cuando se carga el comp
-                    className="mt-12 text-white"
+                    className="text-white"
                     style={{ fontFamily: "Arial" }}
                     variant="shadow"
                     color="success"
