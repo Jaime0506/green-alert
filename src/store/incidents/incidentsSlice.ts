@@ -5,7 +5,7 @@ import { IncidentType, MarkerType } from "../../types";
 interface initialStateProp {
     markers: MarkerType[] | undefined
     loaded: boolean
-    active: MarkerType | undefined
+    active: MarkerType
     listIncidentsType: IncidentType[] | undefined
     isLoading: boolean
 }
@@ -13,7 +13,16 @@ interface initialStateProp {
 const initialState: initialStateProp = {
     markers: [],
     loaded: false,
-    active: undefined,
+    active: {
+        active: false,
+        id: "",
+        incident_type: 0,
+        coords: {
+            lat: 0,
+            lng: 0,
+        },
+        images: []
+    },
     listIncidentsType: [],
     isLoading: false
 }
@@ -48,12 +57,12 @@ const incidentsSlice = createSlice({
         },
 
         clearActiveIncident: (state) => {
-            state.active = undefined
+            state.active = initialState.active
         },
 
         deleteActiveIncident: (state) => {
             state.markers = state.markers?.filter((marker) => marker.id != state.active?.id)
-            state.active = undefined
+            state.active = initialState.active
         },
 
         setIsLoading: (state) => {
@@ -69,7 +78,8 @@ const incidentsSlice = createSlice({
         },
 
         addImage: (state, action: PayloadAction<string[]>) => {
-            state.active.images = [...action.payload]
+            state.active.images = [...state.active.images, ...action.payload]
+            state.isLoading = false
         }
     }
 })

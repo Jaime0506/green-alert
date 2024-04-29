@@ -1,9 +1,8 @@
 import { supabase } from "../../utils/supabase";
-import { clearActiveIncident, clearIsLoading, deleteActiveIncident, loadIncidents, loadIncidentsTypes, setIsLoading, updateIncident } from ".";
+import { addImage, clearActiveIncident, clearIsLoading, deleteActiveIncident, loadIncidents, loadIncidentsTypes, setIsLoading, updateIncident } from ".";
 
 import { handleToToastify, uploadFile } from "../../utils";
 
-import type { FileObject } from '@supabase/storage-js'
 import type { AppDispatch, RootState } from "../store";
 import type { MarkerType, IncidentType } from "../../types";
 
@@ -97,24 +96,61 @@ export const updateDataToDatabase = (dataToUpdate: MarkerType) => {
 export const uploadImages = (files: FileList) => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         
-        console.log("Me llamaron")
+        dispatch(setIsLoading())
 
         const { auth, incidents } = getState()
 
         const { active } = incidents
         const { uid } = auth
 
-        if (!uid) return console.log("No existe una sesion iniciada")
+        if (!uid) {
+            console.log("No existe una sesion iniciada")
+            dispatch(clearIsLoading())
 
-        if (!active?.id) return console.log("No existe un incidente activo")
+            return 
+        }
 
-        const updateFilePromise: Promise<string | false>[] = []
+        if (!(active?.id.length > 0)) {
+            console.log("No existe un incidente activo")
+            dispatch(clearIsLoading())
+        }
+
+        const updateFilePromise: Promise<string>[] = []
 
         for (const file of files) {
             updateFilePromise.push(uploadFile(file, uid, active.id))
         }
 
         const imagesPath = await Promise.all(updateFilePromise)
-        console.log(imagesPath)
+        
+        dispatch(addImage(imagesPath))
+    }
+}
+
+export const cancelActiveIncident = (active: MarkerType) => {
+    return async (dispatch: AppDispatch, getState: () => RootState) => {
+        const { uid } = getState().auth
+
+        if (!uid) return console.log("No existe una sesion iniciada")
+            
+        if (!(active.images.length > 0)) return console.log("No es necesario obtener la lista del registro en el storage")
+
+        const { data, error: error_list } = await supabase.storage.from("test").list(uid + "/" + active.id)
+        
+        if (error_list) {
+            console.log(error_list)
+            return
+        }
+
+        const filesPathToRemove = data.map((image) => `${uid}/${active.id}/${image.name}`)
+
+        const { error } =  await supabase.storage.from("test").remove(filesPathToRemove) 
+        
+        if (error) {
+            console.log(error)
+            return
+        }
+
+        dispatch(deleteActiveIncident())
     }
 }

@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react"
 import { Input, Select, SelectItem } from "@nextui-org/react"
-// import { v4 as uuidv4 } from 'uuid'
 
 import { useAppDispatch, useAppSelector } from "../../../hooks"
-import { supabase } from "../../../utils/supabase"
-
-import type { FileObject } from '@supabase/storage-js'
-import type { FormIncident, IncidentType } from "../../../types"
 import { uploadImages } from "../../../store/incidents"
+
+import type { FormIncident, IncidentType } from "../../../types"
 
 interface FormInputsProps {
     onChangeInputs: (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => void
@@ -17,12 +14,10 @@ interface FormInputsProps {
 
 export const FormInputs = ({ onChangeInputs, formState, listOfTypeIncidents }: FormInputsProps) => {
 
-    const { uid } = useAppSelector(state => state.auth)
     const { active } = useAppSelector(state => state.incidents)
     const dispatch = useAppDispatch()
 
     const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null)
-    const [media, setMedia] = useState<FileObject[]>([])
     const [visibleInput, setVisibleInput] = useState(true)
 
     // const [loading, setLoading] = useState(false)
@@ -44,29 +39,14 @@ export const FormInputs = ({ onChangeInputs, formState, listOfTypeIncidents }: F
         if (selectedFiles && selectedFiles?.length > 0) dispatch(uploadImages(selectedFiles))
     }
 
-    const getMedia = async () => {
-        const { data, error } = await supabase.storage.from('test').list(uid + "/" + active?.id, {
-            limit: 10,
-            offset: 0,
-            sortBy: {
-                column: 'name', order: 'asc'
-            }
-        })
-
-        if (error) return console.log(error)
-
-        setMedia(data)
-    }
-
     useEffect(() => {
         handleUploadImages()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedFiles])
 
     useEffect(() => {
-        if (media.length >= 3) setVisibleInput(false)
-    }, [media])
-    
+        if (active.images.length >= 3) setVisibleInput(false)
+    }, [active.images])
 
     return (
         <section className="flex flex-col flex-1 gap-4">
@@ -138,12 +118,12 @@ export const FormInputs = ({ onChangeInputs, formState, listOfTypeIncidents }: F
 
 
             {
-                media.length > 0 && (
+                active.images.length > 0 && (
                     <section className="flex flex-row gap-2 py-4">
                         {
-                            media.map((media, index) => (
+                            active.images.map((path, index) => (
                                 <div key={index} className="">
-                                    <img src={`https://ohcjcommgokajjptkmhd.supabase.co/storage/v1/object/public/test/${uid}/${active?.id}/${media.name}`} className="w-28" />
+                                    <img src={`https://ohcjcommgokajjptkmhd.supabase.co/storage/v1/object/public/test/${path}`} className="w-28" />
                                 </div>
                             ))
                         }
