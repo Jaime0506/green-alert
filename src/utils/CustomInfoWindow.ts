@@ -7,7 +7,6 @@ import forestFireImg from '../assets/infowindow/forest_fire.svg'
 import landSlideImg from '../assets/infowindow/landslide.svg'
 import strongRainImg from '../assets/infowindow/strong_rains.svg'
 
-
 export const handleIncidentImage = (type: number) => {
     if (type == 1) return forestFireImg
 

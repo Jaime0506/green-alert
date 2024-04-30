@@ -40,7 +40,7 @@ export function Form({ editing, toggleDrawer }: FormProps) {
                     listOfTypeIncidents={listIncidentsType}
                 />
 
-                <Button // Funcion anonima -> evita que se dispare la accion cuando se carga el comp
+                <Button 
                     className="text-white"
                     style={{ fontFamily: "Arial" }}
                     variant="shadow"
