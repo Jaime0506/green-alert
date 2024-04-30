@@ -62,7 +62,6 @@ const incidentsSlice = createSlice({
 
         deleteActiveIncident: (state) => {
             state.markers = state.markers?.filter((marker) => marker.id != state.active?.id)
-            state.active = initialState.active
         },
 
         setIsLoading: (state) => {

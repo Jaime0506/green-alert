@@ -129,6 +129,7 @@ export const uploadImages = (files: FileList) => {
 
 export const cancelActiveIncident = (active: MarkerType) => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
+
         const { uid } = getState().auth
 
         if (!uid) return console.log("No existe una sesion iniciada")
