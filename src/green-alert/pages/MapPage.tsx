@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure, Image } from "@nextui-org/react";
+import { Modal, ModalBody, ModalContent, ModalHeader, useDisclosure, Image } from "@nextui-org/react";
 
 import { useAppDispatch, useAppSelector } from "../../hooks/useStore";
 
@@ -18,7 +18,7 @@ export const MapPage = () => {
     const dispatch = useAppDispatch();
 
     // Modal controller
-    const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
+    const { isOpen, onOpen, onOpenChange } = useDisclosure()
     const [markerActiveModal, setMarkerActiveModal] = useState<MarkerType | null>(null)
 
     const { lat, lng } = coords;
