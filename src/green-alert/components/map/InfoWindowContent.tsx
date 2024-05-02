@@ -1,8 +1,17 @@
-import { Image } from "@nextui-org/react"
-import type { MarkerType } from "../../../types"
+import { Image, Link } from "@nextui-org/react"
 import { handleIncidentActiveColor, handleIncidentActiveText, handleIncidentColor, handleIncidentFormatDate, handleIncidentImage, handleIncidentText } from "../../../utils"
 
-export const InfoWindowContent = ({ active, incident_type, created_at, name }: MarkerType) => {
+import type { MarkerType } from "../../../types"
+
+interface InfoWindowContentProps {
+    marker: MarkerType
+    onClick: (marker: MarkerType) => void
+}
+
+export const InfoWindowContent = ({ marker, onClick }: InfoWindowContentProps) => {
+
+    const { active, incident_type, created_at, name  } = marker
+
     return (
         <div className="w-full">
             <Image
@@ -37,6 +46,14 @@ export const InfoWindowContent = ({ active, incident_type, created_at, name }: M
 
                     <footer>
                         <p className="font-semibold">Creado por: {name}</p>
+
+                        <Link
+                            underline="always"
+                            onClick={() => onClick(marker)}
+                            className="text-xs pt-2 hover:cursor-pointer"
+                        >
+                            Ver mas
+                        </Link>
                     </footer>
                 </section>
             </main>

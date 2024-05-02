@@ -10,20 +10,22 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/useStore";
 
 import { addIncident, cancelActiveIncident, clearActiveIncident, deleteActiveIncident, setActiveIncident } from "../../../store/incidents";
 import { newIncident } from "../../../utils/newIncident";
-import { InfoWindowContent } from "./InfoWindowContent";
+import { InfoWindowContent } from "./";
 
 import { handleIncidentIcon } from "../../../utils";
+import type { MarkerType } from "../../../types";
 
 interface MapProps {
     API_KEY: string;
     isOpenDrawer: boolean;
     toggleDrawer: (type?: "edit") => void;
     editing: boolean
+    onClick: (marker: MarkerType) => void
 }
 
 export const Map = (props: MapProps) => {
 
-    const { API_KEY, editing, isOpenDrawer, toggleDrawer } = props;
+    const { API_KEY, editing, isOpenDrawer, toggleDrawer, onClick } = props;
 
     const { loaded: loadedIncidents, markers, active } = useAppSelector((state) => state.incidents);
     const dispatch = useAppDispatch();
@@ -96,7 +98,7 @@ export const Map = (props: MapProps) => {
     const handleActiveMarker = (id: string) => {
         setActiveMarker(id);
     };
-
+    
     return (
         isLoaded &&
         loadedIncidents && (
@@ -126,7 +128,7 @@ export const Map = (props: MapProps) => {
                         >
                             {activeMarker === marker.id && !isOpenDrawer ? (
                                 <InfoWindow onCloseClick={() => setActiveMarker(null)}>
-                                    <InfoWindowContent {...marker} />
+                                    <InfoWindowContent marker={marker} onClick={onClick} />
                                 </InfoWindow>
                             ) : null}
                         </Marker>
