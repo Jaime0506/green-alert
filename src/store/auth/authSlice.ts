@@ -33,6 +33,9 @@ const authSlice = createSlice({
             state.user = undefined
             state.errorMessage = null
         },
+        errorLogout: (state) => {
+            state.status = "authenticated"
+        }
     },
 });
 
