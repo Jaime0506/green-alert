@@ -12,10 +12,13 @@ interface useFormProps<T> {
 export const useFormIncidents = <T,>({ editing, toggleDrawer, initialState }: useFormProps<T>) => {
 
     const active = useAppSelector(state => state.incidents.active)
+    const { uid } = useAppSelector(state =>  state.auth)
     const dispatch = useAppDispatch()
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+
+        console.log(initialState)
         
         if (editing) {
             updateIncident(initialState as MarkerType)
@@ -30,10 +33,13 @@ export const useFormIncidents = <T,>({ editing, toggleDrawer, initialState }: us
         if (active == undefined) return
 
         const newData = { ...active }
+
+        if (!uid) return 
         
         newData.name = formState.name
         newData.active = true
         newData.incident_type = formState.incident_type
+        newData.create_by = uid
 
         dispatch(uploadDataToDatabase(newData))
     }

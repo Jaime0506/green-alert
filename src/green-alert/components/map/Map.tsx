@@ -101,6 +101,9 @@ export const Map = (props: MapProps) => {
   const handleOnDoubleClick = (id: string) => {
     if (status === "authenticated") {
       const currentIncident = markers?.filter((marker) => marker.id === id)[0];
+      
+      console.log(currentIncident)
+      console.log(uid)
 
       if (currentIncident?.create_by) {
 
