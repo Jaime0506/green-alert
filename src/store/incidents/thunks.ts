@@ -39,18 +39,13 @@ export const fetchDataIncidents = () => {
 };
 
 export const uploadDataToDatabase = (dataToUpload: MarkerType) => {
-    return async (dispatch: AppDispatch, getState: () => RootState) => {
-
-        const { uid } = getState().auth
-        const create_by = uid
-
-        const data = {...dataToUpload, create_by}
+    return async (dispatch: AppDispatch) => {
 
         dispatch(setIsLoading())
 
         const { error } = await supabase
             .from("incidents_duplicate")
-            .insert(data);
+            .insert(dataToUpload);
 
         if (error) {
             console.error("Error subiendo datos:", error.message);
