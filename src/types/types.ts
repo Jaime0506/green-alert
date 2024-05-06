@@ -9,6 +9,7 @@ interface MarkerType {
         lng: number
     }
     images: string[]
+    create_by?: string
 }
 
 interface FormIncident {
