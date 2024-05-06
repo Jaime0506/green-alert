@@ -30,7 +30,7 @@ interface MapProps {
 }
 
 export const Map = (props: MapProps) => {
-  const { status } = useAppSelector((state) => state.auth);
+  const { status, uid } = useAppSelector((state) => state.auth);
 
   const { API_KEY, editing, isOpenDrawer, toggleDrawer, onClick } = props;
 
@@ -102,13 +102,20 @@ export const Map = (props: MapProps) => {
     if (status === "authenticated") {
       const currentIncident = markers?.filter((marker) => marker.id === id)[0];
 
-      if (!isOpenDrawer && currentIncident) {
-        dispatch(setActiveIncident({ ...currentIncident }));
-        toggleDrawer("edit");
-      }
+      if (currentIncident?.create_by) {
 
-      setActiveMarker(null);
+        if (currentIncident.create_by !== uid) return 
+
+        console.log(currentIncident)
+        if (!isOpenDrawer && currentIncident) {
+          dispatch(setActiveIncident({ ...currentIncident }));
+          toggleDrawer("edit");
+        }
+
+        setActiveMarker(null);
+      }
     }
+    setActiveMarker(null);
   };
 
   const handleActiveMarker = (id: string) => {

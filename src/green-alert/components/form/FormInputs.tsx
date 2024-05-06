@@ -62,6 +62,8 @@ export const FormInputs = ({ onChangeInputs, formState, listOfTypeIncidents }: F
                     onChange={onChangeInputs}
                     aria-label="Nombre de usuario"
                     value={formState.name}
+                    disabled
+
                 />
             </div>
 
