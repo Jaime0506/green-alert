@@ -3,10 +3,26 @@ import { supabase } from "../../utils/supabase"
 import { AppDispatch } from "../store"
 import { checking, login, logout } from "./authSlice"
 import type { AuthType, FormLogin, FormRegister } from "../../types"
+import { toast } from "react-toastify"
+import { validationEmail } from "../../utils/validationEmail"
 
 export const onRegisterUser = (formState: FormRegister) => {
     return async (dispatch: AppDispatch) => {
         dispatch(checking())
+
+        if (!validationEmail(formState.email)) {
+            toast.error("Invalid Email",{
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            })
+
+            dispatch(logout())
+
+            return
+        }
 
         const { data, error } = await supabase.auth.signUp({
             email: formState.email,
@@ -18,7 +34,19 @@ export const onRegisterUser = (formState: FormRegister) => {
             }
         })
 
-        if (error) return console.log(error)
+        if (error) {
+            toast.error(error.message, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            })
+
+            dispatch(logout())
+
+            return
+        }
 
         const { user } = data
 
@@ -50,7 +78,19 @@ export const onLoginUser = (formState: FormLogin) => {
             password: formState.password,
         })
 
-        if (error) return console.log(error)
+        if (error) {
+            toast.error(error.message, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            })
+
+            dispatch(logout())
+
+            return
+        }
 
         const { user } = data
 
@@ -82,7 +122,7 @@ export const onGetUser = () => {
         if (error) return console.log(error)
 
         if (!session?.user) return dispatch(logout())
-            
+
         const { id, email, user_metadata } = session.user
         const { name } = user_metadata
 
@@ -96,7 +136,7 @@ export const onGetUser = () => {
             errorMessage: null
         }
 
-        dispatch(login(userData))        
+        dispatch(login(userData))
     }
 }
 
@@ -104,9 +144,19 @@ export const onLogoutUser = () => {
     return async (dispatch: AppDispatch) => {
         dispatch(checking())
 
-        const { error } =  await supabase.auth.signOut()
+        const { error } = await supabase.auth.signOut()
 
-        if (error) return console.log("No pudimos cerrar sesion")
+        if (error) {
+            toast.error("No se ha podido cerrar sesion, intente nuevamente", {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            })
+
+            return
+        }
 
         dispatch(logout())
     }
