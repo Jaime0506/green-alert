@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import type { AuthType } from '../../types';
 
 const initialState: AuthType = {
-    status: "not-authenticated",
+    status: "checking",
     uid: null,
     user: {
         email: undefined,
