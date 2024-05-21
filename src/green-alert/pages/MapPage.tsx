@@ -138,11 +138,11 @@ export const MapPage = () => {
                 </ModalContent>
             </Modal>
 
-            <div className="flex absolute bg-green-500 items-end justify-end p-5" style={{ width: 'calc(100vw - 15px)', height: 'calc(100vh - 110px)' }}>
-                <Link to='/admin' >
-                    <span className="bg-red-600 flex items-center justify-center w-4 h-4 p-6 rounded-full" >
+            <div className="flex absolute items-end justify-start p-5" style={{ width: 'calc(100vw - 15px)', height: 'calc(100vh - 110px)' }}>
+                <Link to='/admin' className="text-[50px]">
+                    <div className="bg-gray-100 p-3 rounded-full shadow-xl">
                         <RiAdminFill />
-                    </span>
+                    </div>
                 </Link>
             </div>
         </main>
