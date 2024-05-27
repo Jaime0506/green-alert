@@ -9,8 +9,11 @@ import { Loading } from "../../components";
 
 import type { MarkerType } from "../../types";
 import { handleIncidentFormatDate, handleIncidentImage, handleIncidentText } from "../../utils";
+import { Link } from "react-router-dom";
+import { RiAdminFill } from "react-icons/ri";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
+// const ADMIN_KEY = import.meta.env.ADMIN_KEY;
 
 export const MapPage = () => {
 
@@ -52,15 +55,10 @@ export const MapPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    useEffect(() => {
-        console.log(markerActiveModal)
-    }, [markerActiveModal])
-
-
     if (lat === null && lng === null) return <Loading />;
 
     return (
-        <div className="border-t border-green-500 flex p-2">
+        <main className="border-t border-green-500 flex p-2">
 
             <Map
                 API_KEY={API_KEY}
@@ -139,6 +137,14 @@ export const MapPage = () => {
                     </>
                 </ModalContent>
             </Modal>
-        </div >
+
+            <div className="flex absolute items-end justify-start p-5 pointer-events-none" style={{ width: 'calc(100vw - 15px)', height: 'calc(100vh - 110px)' }}>
+                <Link to='/admin' className="text-[50px] pointer-events-auto">
+                    <div className="bg-gray-100 p-3 rounded-full shadow-xl">
+                        <RiAdminFill />
+                    </div>
+                </Link>
+            </div>
+        </main>
     );
 };

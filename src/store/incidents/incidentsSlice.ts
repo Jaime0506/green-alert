@@ -79,6 +79,10 @@ const incidentsSlice = createSlice({
         addImage: (state, action: PayloadAction<string[]>) => {
             state.active.images = [...state.active.images, ...action.payload]
             state.isLoading = false
+        },
+
+        deleteIncident: (state, action:  PayloadAction<string>) => {
+            state.markers = state.markers?.filter(marker => marker.id != action.payload)
         }
     }
 })
@@ -93,7 +97,8 @@ export const {
     setIsLoading, 
     clearIsLoading, 
     loadIncidentsTypes,
-    addImage
+    addImage,
+    deleteIncident
 } = incidentsSlice.actions
 
 export default incidentsSlice.reducer
