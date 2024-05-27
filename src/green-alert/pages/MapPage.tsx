@@ -13,11 +13,12 @@ import { Link } from "react-router-dom";
 import { RiAdminFill } from "react-icons/ri";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
-// const ADMIN_KEY = import.meta.env.ADMIN_KEY;
+const ADMIN_KEY = import.meta.env.VITE_ADMIN_KEY;
 
 export const MapPage = () => {
 
     const { coords } = useAppSelector((state) => state.location);
+    const UID = useAppSelector(state => state.auth.uid)
     const dispatch = useAppDispatch();
 
     // Modal controller
@@ -138,13 +139,18 @@ export const MapPage = () => {
                 </ModalContent>
             </Modal>
 
-            <div className="flex absolute items-end justify-start p-5 pointer-events-none" style={{ width: 'calc(100vw - 15px)', height: 'calc(100vh - 110px)' }}>
-                <Link to='/admin' className="text-[50px] pointer-events-auto">
-                    <div className="bg-gray-100 p-3 rounded-full shadow-xl">
-                        <RiAdminFill />
+            {
+                ADMIN_KEY == UID ? (
+
+                    <div className="flex absolute items-end justify-start p-5 pointer-events-none" style={{ width: 'calc(100vw - 15px)', height: 'calc(100vh - 110px)' }}>
+                        <Link to='/admin' className="text-[50px] pointer-events-auto">
+                            <div className="bg-gray-100 p-3 rounded-full shadow-xl">
+                                <RiAdminFill />
+                            </div>
+                        </Link>
                     </div>
-                </Link>
-            </div>
+                ) : null
+            }
         </main>
     );
 };
