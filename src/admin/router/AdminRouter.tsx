@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Routes, Route } from "react-router-dom"
 
 import { useAppDispatch, useAppSelector } from "../../hooks"
-import { fetchDataIncidents } from "../../store/incidents"
+import { fetchDataIncidentTypes, fetchDataIncidents } from "../../store/incidents"
 
 import { Loading } from "../../components"
 import { DashboardPage } from "../page"
@@ -22,7 +22,13 @@ export const AdminRouter = () => {
     }, [])
 
     useEffect(() => {
+        dispatch(fetchDataIncidentTypes())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    useEffect(() => {
         setMarkersTemp(markers)
+        console.log("Me llamo otra ve")
     }, [markers])
 
     if (markersTemp === undefined) return <Loading />
