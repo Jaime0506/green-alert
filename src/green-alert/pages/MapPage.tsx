@@ -7,10 +7,10 @@ import { Map, DrawerWrapper, Form } from "../components";
 import { fetchDataIncidentTypes, fetchDataIncidents } from "../../store/incidents";
 import { Loading } from "../../components";
 
-import type { MarkerType } from "../../types";
 import { handleIncidentFormatDate, handleIncidentImage, handleIncidentText } from "../../utils";
 import { Link } from "react-router-dom";
 import { RiAdminFill } from "react-icons/ri";
+import type { MarkerType } from "../../types";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 const ADMIN_KEY = import.meta.env.VITE_ADMIN_KEY;

@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import { store } from './store/store.ts'
 import { ToastContainer } from 'react-toastify'
 
-import GreenAlert from './GreenAlert.tsx'
+import GreenAlert from './GreenAlert'
 
 import './index.css'
 import "react-toastify/dist/ReactToastify.css";

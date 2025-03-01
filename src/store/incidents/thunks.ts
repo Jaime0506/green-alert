@@ -8,7 +8,7 @@ import type { MarkerType, IncidentType } from "../../types";
 
 export const fetchDataIncidentTypes = () => {
     return async (dispatch: AppDispatch) => {
-        const { data, error } = await supabase.from("incident_type").select()
+        const { data, error } = await supabase.from("incident_types").select()
 
         if (error) return console.log(error);
 
@@ -24,7 +24,7 @@ export const fetchDataIncidentTypes = () => {
 
 export const fetchDataIncidents = () => {
     return async (dispatch: AppDispatch) => {
-        const { data, error } = await supabase.from("incidents_duplicate").select();
+        const { data, error } = await supabase.from("incidents").select();
 
         if (error) return console.log(error);
 
@@ -44,7 +44,7 @@ export const uploadDataToDatabase = (dataToUpload: MarkerType) => {
         dispatch(setIsLoading())
 
         const { error } = await supabase
-            .from("incidents_duplicate")
+            .from("incidents")
             .insert(dataToUpload);
 
         if (error) {
@@ -71,7 +71,7 @@ export const updateDataToDatabase = (dataToUpdate: MarkerType) => {
         dispatch(setIsLoading())
 
         const { error } = await supabase
-            .from("incidents_duplicate")
+            .from("incidents")
             .update(dataToUpdate)
             .eq("id", dataToUpdate.id);
 
