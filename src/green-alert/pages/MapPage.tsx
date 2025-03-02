@@ -10,7 +10,7 @@ import { Loading } from "../../components";
 import { handleIncidentFormatDate, handleIncidentImage, handleIncidentText } from "../../utils";
 import { Link } from "react-router-dom";
 import { RiAdminFill } from "react-icons/ri";
-import type { MarkerType } from "../../types";
+import type { CoordsTypes, MarkerType } from "../../types";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 const ADMIN_KEY = import.meta.env.VITE_ADMIN_KEY;
@@ -60,8 +60,8 @@ export const MapPage = () => {
 
     return (
         <main className="border-t border-green-500 flex p-2">
-
             <Map
+                currentCoords={coords as CoordsTypes}
                 API_KEY={API_KEY}
                 toggleDrawer={toggleDrawer}
                 isOpenDrawer={isOpenDrawer}

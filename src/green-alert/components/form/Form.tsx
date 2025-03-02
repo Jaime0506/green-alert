@@ -28,7 +28,7 @@ export function Form({ editing, toggleDrawer }: FormProps) {
     if (!listIncidentsType) return null
 
     return (
-        <form action="submit" onSubmit={onSubmit} className="border border-purple-500">
+        <form action="submit" onSubmit={onSubmit}>
             <div className="flex flex-col p-4 px-8 gap-3" style={{ maxHeight: "100vh",  }}>
                 <h1 className="px-6 text-[3.5rem]" >
                     GreenAlert

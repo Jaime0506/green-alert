@@ -4,10 +4,7 @@ interface MarkerType {
     id: string
     incident_type: number
     name?: string
-    coords: {
-        lat: number,
-        lng: number
-    }
+    coords: CoordsTypes 
     images: string[]
     create_by?: string
 }
@@ -43,4 +40,9 @@ interface AuthType {
     errorMessage: string | null
 }
 
-export type { MarkerType, FormIncident, IncidentType, FormLogin, FormRegister, AuthType }
+interface CoordsTypes {
+    lat: number
+    lng: number
+}
+
+export type { MarkerType, FormIncident, IncidentType, FormLogin, FormRegister, AuthType, CoordsTypes }

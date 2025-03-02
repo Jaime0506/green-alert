@@ -19,20 +19,22 @@ import { newIncident } from "../../../utils/newIncident";
 import { InfoWindowContent } from "./";
 
 import { handleIncidentIcon } from "../../../utils";
-import type { MarkerType } from "../../../types";
+import { MapContainerStyles } from "../../../utils/map/styles";
+import type { CoordsTypes, MarkerType } from "../../../types";
 
 interface MapProps {
   API_KEY: string;
   isOpenDrawer: boolean;
-  toggleDrawer: (type?: "edit") => void;
   editing: boolean;
+  currentCoords: CoordsTypes
+  toggleDrawer: (type?: "edit") => void;
   onClick: (marker: MarkerType) => void;
 }
 
 export const Map = (props: MapProps) => {
   const { status, uid } = useAppSelector((state) => state.auth);
 
-  const { API_KEY, editing, isOpenDrawer, toggleDrawer, onClick } = props;
+  const { API_KEY, editing, isOpenDrawer, toggleDrawer, onClick, currentCoords } = props;
 
   const {
     loaded: loadedIncidents,
@@ -49,10 +51,16 @@ export const Map = (props: MapProps) => {
   const [activeMarker, setActiveMarker] = useState<string | null>(null);
 
   const handleOnLoad = (map: google.maps.Map) => {
-    const bounds = new google.maps.LatLngBounds();
+    const bounds = new google.maps.LatLngBounds(currentCoords);
     markers?.forEach(({ coords }) => bounds.extend(coords));
 
     map.fitBounds(bounds);
+    
+    // El fitbounds calcula el zoom necesario para mostrar todos los marcadores
+    // pero si el zoom es mayor a 18, se establece en 18
+    setTimeout(() => {
+      map.setZoom(18);
+    }, 100)
   };
 
   const handleOnClickMap = (event: google.maps.MapMouseEvent) => {
@@ -101,13 +109,13 @@ export const Map = (props: MapProps) => {
   const handleOnDoubleClick = (id: string) => {
     if (status === "authenticated") {
       const currentIncident = markers?.filter((marker) => marker.id === id)[0];
-      
+
       console.log(currentIncident)
       console.log(uid)
 
       if (currentIncident?.create_by) {
 
-        if (currentIncident.create_by !== uid) return 
+        if (currentIncident.create_by !== uid) return
 
         console.log(currentIncident)
         if (!isOpenDrawer && currentIncident) {
@@ -129,14 +137,10 @@ export const Map = (props: MapProps) => {
     isLoaded &&
     loadedIncidents && (
       <GoogleMap
+        zoom={18}
         onLoad={handleOnLoad}
         onClick={handleOnClickMap}
-        mapContainerStyle={{
-          width: "100vw",
-          height: "calc(100vh - 111px)",
-          borderRadius: "8px",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.4)",
-        }}
+        mapContainerStyle={MapContainerStyles}
       >
         {markers?.map((marker) => (
           <Marker
