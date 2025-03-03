@@ -23,7 +23,6 @@ export const RegisterPage = () => {
 
     const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("LLEGE")
 
         dispatch(onRegisterUser(formState))
     };

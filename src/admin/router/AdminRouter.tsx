@@ -28,7 +28,6 @@ export const AdminRouter = () => {
 
     useEffect(() => {
         setMarkersTemp(markers)
-        console.log("Me llamo otra ve")
     }, [markers])
 
     if (markersTemp === undefined) return <Loading />

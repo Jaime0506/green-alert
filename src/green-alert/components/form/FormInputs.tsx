@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Input, Select, SelectItem } from "@nextui-org/react"
+import { Select, SelectItem } from "@nextui-org/react"
 
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import { uploadImages } from "../../../store/incidents"
@@ -49,24 +49,6 @@ export const FormInputs = ({ onChangeInputs, formState, listOfTypeIncidents }: F
 
     return (
         <section className="flex flex-col flex-1 gap-4">
-            <div className="flex flex-col gap-2 items-start mb-1 text-left">
-                <h1 style={{ color: "#17C964" }}>Nombre</h1>
-                <Input
-                    required
-                    isRequired
-                    type="text"
-                    placeholder="Nombre de usuario"
-                    labelPlacement="outside"
-                    style={{ textAlign: "left", width: "300px" }}
-                    name="name"
-                    onChange={onChangeInputs}
-                    aria-label="Nombre de usuario"
-                    value={formState.name}
-                    disabled
-
-                />
-            </div>
-
             <div className="flex flex-col gap-2 text-left">
                 <h1 style={{ color: "#17C964" }}>
                     Tipo de Incidente
@@ -98,7 +80,7 @@ export const FormInputs = ({ onChangeInputs, formState, listOfTypeIncidents }: F
                     Imagenes del incidente
                 </h1>
 
-                <InputImages 
+                <InputImages
                     isVisible={isVisible}
                     onChangeFile={handleChangeFile}
                 />

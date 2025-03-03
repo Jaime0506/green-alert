@@ -66,7 +66,7 @@ export const DashboardPage = ({ markers }: DashboardPageProps) => {
         const dataUpdate = { ...formValues }
 
         const { error } = await supabase
-            .from("incidents_duplicate")
+            .from("incidents")
             .update(dataUpdate)
             .eq("id", dataUpdate.id)
 
@@ -104,7 +104,7 @@ export const DashboardPage = ({ markers }: DashboardPageProps) => {
         console.log("Me llamaron")
 
         const { error } = await supabase
-            .from("incidents_duplicate")
+            .from("incidents")
             .delete()
             .eq("id", id)
 

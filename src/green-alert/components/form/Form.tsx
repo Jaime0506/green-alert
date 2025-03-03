@@ -21,7 +21,6 @@ const initialStateForm: FormIncident = {
 export function Form({ editing, toggleDrawer }: FormProps) {
 
     const { listIncidentsType, isLoading } = useAppSelector((state) => state.incidents);
-
     const { formState, onChangeInputs } = useFormValues<FormIncident>({ initialStateForm })
     const { onSubmit } = useFormIncidents({ editing, initialState: formState, toggleDrawer})
 
